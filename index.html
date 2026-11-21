@@ -25,6 +25,15 @@ a{color:inherit}a:hover{color:#15803d}
 @keyframes rk-strike{0%,100%{transform:rotate(0)}40%{transform:rotate(14deg)}}
 @keyframes rk-wave{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){.rk-ring .rk-dome,.rk-ring .rk-lever{animation:none}}
+@media (prefers-reduced-motion: no-preference){
+html{scroll-snap-type:y proximity}
+#top,#sager,#om,#tal,#find,#kontakt{scroll-snap-align:start;scroll-margin-top:-72px}
+#top{scroll-margin-top:0}
+@supports (animation-timeline: view()){
+#top > section,#sager,#om,#tal,#find,#kontakt{animation:rk-fade linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
+@keyframes rk-fade{entry 0%{opacity:.4;transform:translateY(20px)}entry 55%{opacity:1;transform:none}exit 45%{opacity:1;transform:none}exit 100%{opacity:.4;transform:translateY(-10px)}}
+}
+}
 </style>
 </head>
 <body>
