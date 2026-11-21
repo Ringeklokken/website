@@ -375,7 +375,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   var lp=document.getElementById('rk-lane-path'),ls=document.getElementById('rk-lane-stop'),marks=document.getElementById('rk-lane-marks'),fade=document.getElementById('rk-lane-fade'),scen=document.getElementById('rk-scenery');
   var paths=['rk-lane-curb','rk-lane-path','rk-lane-line','rk-lane-inner'].map(function(i){return document.getElementById(i)});
   var ka=document.getElementById('rk-knee-a'),kb=document.getElementById('rk-knee-b'),lastSig='';
-  var on=false,L=0,cur=null,curAng=90,raf=0,dist=0,sp=0,TBL=null,NS='http://www.w3.org/2000/svg';
+  var on=false,L=0,cur=null,curAng=90,raf=0,dist=0,sp=0,dir=1,dirN=0,TBL=null,NS='http://www.w3.org/2000/svg';
   function docRect(e){var r=e.getBoundingClientRect();return {l:r.left+scrollX,t:r.top+scrollY,r:r.right+scrollX,b:r.bottom+scrollY};}
   function spline(P){var d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
     for(var i=0;i<P.length-1;i++){var p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
@@ -454,7 +454,8 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     var gap=t-cur,step;if(Math.abs(gap)>4000){step=gap;sp=0;}else{sp+=gap*0.075-sp*0.5;step=sp;if(Math.abs(gap)<0.4&&Math.abs(sp)<0.4){step=gap;sp=0;}}
     cur+=step;dist+=Math.abs(step);
     var pt=lp.getPointAtLength(cur),q=lp.getPointAtLength(Math.min(L,cur+8)),b=lp.getPointAtLength(Math.max(0,cur-8));
-    var ang=Math.atan2(q.y-b.y,q.x-b.x)*57.2958;
+    var want=sp<-1.5?-1:(sp>1.5?1:dir);if(want!==dir){dirN++;if(dirN>5){dir=want;dirN=0;}}else dirN=0;
+    var ang=Math.atan2(q.y-b.y,q.x-b.x)*57.2958+(dir<0?180:0);
     var da=((ang-curAng+540)%360)-180;curAng+=Math.max(-9,Math.min(9,da*0.3));
     el.style.transform='translate('+pt.x.toFixed(1)+'px,'+pt.y.toFixed(1)+'px) rotate('+curAng.toFixed(1)+'deg)';
     var c=Math.sin(dist/8)*2.2;ka.setAttribute('cx',(-8+c).toFixed(2));kb.setAttribute('cx',(-8-c).toFixed(2));
