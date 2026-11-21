@@ -48,6 +48,20 @@ a{color:inherit}a:hover{color:#15803d}
 .rk-lane-on #rk-lane,.rk-lane-on #rk-rider{display:block}
 .rk-lane-on .rk-split-aside{position:static}
 @media (prefers-reduced-motion: reduce){#rk-rider,#rk-lane{display:none!important}}
+#rk-xing{position:relative;height:240px;margin-top:24px;overflow:hidden}
+#rk-xing .rk-road{position:absolute;left:0;right:0;top:86px;height:72px;background:#3f4643;border-top:2px solid #c4ccc7;border-bottom:2px solid #c4ccc7}
+#rk-xing .rk-road::after{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:repeating-linear-gradient(90deg,#ffffff 0 22px,transparent 22px 46px);opacity:.75}
+.rk-car{position:absolute;left:0;top:0;width:64px;height:30px;will-change:transform;z-index:3}
+.rk-car svg{display:block}
+.rk-puff{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#9aa39e;pointer-events:none;z-index:2;filter:blur(1px);animation:rk-puff 1.2s ease-out forwards}
+@keyframes rk-puff{from{transform:translate(var(--x),var(--y)) scale(.5);opacity:.6}to{transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(2.6);opacity:0}}
+.rk-light{position:absolute;top:18px;left:16px;width:22px;height:56px;border-radius:7px;background:#1b1f1d;padding:4px 5px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,.25);z-index:2}
+.rk-light::after{content:"";position:absolute;left:9px;top:56px;width:4px;height:12px;background:#8a948e}
+.rk-light i{display:block;width:12px;height:12px;border-radius:50%;background:#3a403c;transition:background .2s,box-shadow .2s}
+.rk-light .r.on{background:#ef3b2d;box-shadow:0 0 9px #ef3b2d}
+.rk-light .y.on{background:#f5c518;box-shadow:0 0 9px #f5c518}
+.rk-light .g.on{background:#2fd26b;box-shadow:0 0 9px #2fd26b}
+@media (max-width:760px){#rk-xing{height:200px}#rk-xing .rk-road{top:70px}}
 </style>
 </head>
 <body>
@@ -158,6 +172,11 @@ a{color:inherit}a:hover{color:#15803d}
       </div>
     </div>
   </section>
+
+  <div id="rk-xing" aria-hidden="true">
+    <div class="rk-road"></div>
+    <div class="rk-light"><i class="r on"></i><i class="y"></i><i class="g"></i></div>
+  </div>
 
   <section id="tal" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
     <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
@@ -354,6 +373,50 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   btn.addEventListener('click',function(){ding();clearTimeout(t);svg.classList.remove('rk-ring');void svg.getBoundingClientRect();svg.classList.add('rk-ring');t=setTimeout(function(){svg.classList.remove('rk-ring')},900);});
 })();
 </script>
+<script>
+(function(){
+  var band=document.getElementById('rk-xing');if(!band)return;
+  var road=band.querySelector('.rk-road'),light=band.querySelector('.rk-light'),lamps={r:light.querySelector('.r'),y:light.querySelector('.y'),g:light.querySelector('.g')};
+  var X=window.RK_X=window.RK_X||{};X.locked=false;X.done=false;
+  function set(c){['r','y','g'].forEach(function(k){lamps[k].classList.toggle('on',k===c||(c==='ry'&&k!=='g'));});}
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){set('g');X.done=true;return;}
+  function bandY(){var r=band.getBoundingClientRect();return r.top+scrollY;}
+  function lockY(){if(typeof X.lockY==='number')return X.lockY;return Math.max(0,bandY()+band.offsetHeight/2-innerHeight/2);}
+  if(scrollY>lockY()+40){set('g');X.done=true;}
+  var COLORS=['#d8432f','#f4f4f2','#1f2a33','#2f6fd0','#e3b23c','#7a8a82'];
+  function carSVG(c){return '<svg viewBox="0 0 64 30" width="64" height="30"><rect x="10" y="0" width="11" height="5" rx="2" fill="#111"></rect><rect x="44" y="0" width="11" height="5" rx="2" fill="#111"></rect><rect x="10" y="25" width="11" height="5" rx="2" fill="#111"></rect><rect x="44" y="25" width="11" height="5" rx="2" fill="#111"></rect><rect x="1" y="3" width="62" height="24" rx="8" fill="'+c+'" stroke="rgba(0,0,0,.25)"></rect><rect x="19" y="6.5" width="22" height="17" rx="4" fill="rgba(0,0,0,.16)"></rect><rect x="40" y="6" width="9" height="18" rx="3" fill="#bcd7e8"></rect><rect x="12" y="7" width="6" height="16" rx="2" fill="#bcd7e8" opacity=".75"></rect><rect x="60" y="6" width="3" height="5" rx="1" fill="#fff6c2"></rect><rect x="60" y="19" width="3" height="5" rx="1" fill="#fff6c2"></rect></svg>';}
+  function runCars(total){
+    var W=band.clientWidth,rh=road.offsetHeight,rt=road.offsetTop,cars=[],t0=performance.now();
+    var plan=[[150,1,0,1050],[600,-1,1,900],[1150,1,2,1250],[1650,-1,3,980],[2150,1,4,1100],[2500,-1,5,1200]];
+    plan.forEach(function(p){var el=document.createElement('div');el.className='rk-car';el.innerHTML=carSVG(COLORS[p[2]]);el.style.visibility='hidden';band.appendChild(el);
+      cars.push({el:el,start:p[0],dir:p[1],v:p[3],y:p[1]>0?rt+rh-36:rt+6,lastPuff:0});});
+    function frame(n){var t=n-t0,alive=false;
+      cars.forEach(function(c){var dt=(t-c.start)/1000;if(dt<0){alive=true;return;}
+        var x=c.dir>0?-80+dt*c.v:W+16-dt*c.v;if((c.dir>0&&x>W+20)||(c.dir<0&&x<-90)){if(c.el.parentNode)c.el.remove();return;}alive=true;
+        c.el.style.visibility='visible';c.el.style.transform='translate('+x.toFixed(1)+'px,'+c.y+'px)'+(c.dir<0?' scaleX(-1)':'');
+        if(t-c.lastPuff>55){c.lastPuff=t;var pf=document.createElement('div');pf.className='rk-puff';var px=c.dir>0?x-2:x+66,py=c.y+21+(Math.random()*4-2);
+          pf.style.setProperty('--x',px+'px');pf.style.setProperty('--y',py+'px');pf.style.setProperty('--dx',(-c.dir*(18+Math.random()*26))+'px');pf.style.setProperty('--dy',(Math.random()*16-8)+'px');
+          band.appendChild(pf);setTimeout(function(){pf.remove();},1250);}});
+      if(alive&&t<total+2000)requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);
+  }
+  var KEYS={32:1,33:1,34:1,35:1,36:1,38:1,40:1};
+  function stop(e){e.preventDefault();}
+  function key(e){if(KEYS[e.keyCode])e.preventDefault();}
+  function hold(){if(X.locked&&Math.abs(scrollY-X.atY)>1)scrollTo(0,X.atY);}
+  function lock(){
+    X.done=true;X.locked=true;X.atY=Math.round(lockY());scrollTo(0,X.atY);
+    addEventListener('wheel',stop,{passive:false});addEventListener('touchmove',stop,{passive:false});addEventListener('keydown',key);addEventListener('scroll',hold);
+    set('r');runCars(4000);
+    setTimeout(function(){set('y');},3900);
+    setTimeout(function(){set('g');X.locked=false;removeEventListener('wheel',stop);removeEventListener('touchmove',stop);removeEventListener('keydown',key);removeEventListener('scroll',hold);if(X.onGreen)X.onGreen();},4600);
+  }
+  var lastY=scrollY;
+  addEventListener('scroll',function(){if(X.done){lastY=scrollY;return;}var ly=lockY(),jump=Math.abs(scrollY-lastY)>innerHeight*1.5;
+    if(scrollY>=ly){if(jump&&scrollY>ly+innerHeight){X.done=true;set('g');}else lock();}lastY=scrollY;},{passive:true});
+})();
+</script>
 <svg id="rk-lane" aria-hidden="true"><defs><linearGradient id="rk-lane-fade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="140"><stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop><stop offset="1" stop-color="#ffffff" stop-opacity="1"></stop></linearGradient><mask id="rk-lane-mask" maskUnits="userSpaceOnUse"><rect x="0" y="0" width="100%" height="100%" fill="url(#rk-lane-fade)"></rect></mask></defs>
 <g mask="url(#rk-lane-mask)"><path id="rk-lane-curb" fill="none" stroke="#c4ccc7" stroke-width="34" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-path" fill="none" stroke="#4d5551" stroke-width="30" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-line" fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="butt" stroke-linejoin="round" opacity=".9"></path><path id="rk-lane-inner" fill="none" stroke="#4d5551" stroke-width="19" stroke-linecap="butt" stroke-linejoin="round"></path><g id="rk-lane-marks"></g><g id="rk-scenery"></g><path id="rk-lane-stop" fill="none" stroke="#ffffff" stroke-width="3"></path></g></svg>
 <div id="rk-rider" aria-hidden="true">
@@ -392,13 +455,13 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     on=margin>=124;document.documentElement.classList.toggle('rk-lane-on',on);
     if(!on){cancelAnimationFrame(raf);raf=0;lastSig='';return;}
     var sig=[W,H,innerHeight,Math.round(docRect(document.querySelector('#om > div')).t),Math.round(docRect(document.querySelector('.rk-index')).b)].join('|');if(sig===lastSig)return;lastSig=sig;
-    var xL=margin/2,xR=W-margin/2,A=Math.max(0,Math.min(margin/2-40,34));
+    var xL=margin/2,xR=W-margin/2,A=Math.max(0,Math.min(margin/2-32,44));
     var yS=docRect(document.querySelector('header')).b;
     var ft=document.querySelector('footer'),fT=ft?docRect(ft).t:H;
     var idx=document.querySelector('.rk-index'),main=document.querySelector('.rk-split-main'),omBox=document.querySelector('#om > div');
     var ib=docRect(idx),mL=docRect(main).l,ob=docRect(omBox);
     var P=[[xR,yS]];
-    function run(x,y0,y1,ph){for(var y=y0+170;y<y1-110;y+=170)P.push([x+A*Math.sin((y-yS)/480+ph),y]);}
+    function run(x,y0,y1,ph){for(var y=y0+110;y<y1-110;y+=85)P.push([x+A*Math.sin((y-yS)/52+ph),y]);}
     var xIn=Math.min(mL-90,margin+250);
     function secTop(id){var e=document.getElementById(id);return e?docRect(e).t:null;}
     var gaps=[ob.t-62,secTop('tal')+40,secTop('find')+40,secTop('kontakt')+40].filter(function(g){return g&&isFinite(g);});
@@ -421,7 +484,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     while(marks.firstChild)marks.removeChild(marks.firstChild);
     for(var s=320;s<L-160;s+=640){var p=lp.getPointAtLength(s),q=lp.getPointAtLength(s+3);add(marks,BIKE,p.x,p.y,Math.atan2(q.y-p.y,q.x-p.x)*57.2958-90);}
     // scenery
-    var obs=[];['header','#top > div','#top > section','.rk-split-aside h2','.rk-index','.rk-split-main','#om > div','#tal > *','#find > *','#kontakt > *','footer'].forEach(function(sel){Array.prototype.forEach.call(document.querySelectorAll(sel),function(n){var b=docRect(n);if(b.r-b.l>0)obs.push(b);});});
+    var obs=[];['header','#top > div','#top > section','.rk-split-aside h2','.rk-index','.rk-split-main','#om > div','#rk-xing .rk-road','#rk-xing .rk-light','#tal > *','#find > *','#kontakt > *','footer'].forEach(function(sel){Array.prototype.forEach.call(document.querySelectorAll(sel),function(n){var b=docRect(n);if(b.r-b.l>0)obs.push(b);});});
     function free(x,y,rad){if(x-rad<6||x+rad>W-6||y-rad<yS+60)return false;var inM=(x+rad<margin-8)||(x-rad>W-margin+8),inA=(x+rad<mL-40&&x-rad>margin&&y-rad>ib.b+24&&y+rad<ob.t-90);if(!inM&&!inA)return false;for(var i=0;i<obs.length;i++){var o=obs[i];if(x+rad>o.l-10&&x-rad<o.r+10&&y+rad>o.t-10&&y-rad<o.b+10)return false;}
       for(var k=0;k<placed.length;k++){var q=placed[k];if(Math.hypot(q[0]-x,q[1]-y)<q[2]+rad+6)return false;}
       var nearest=lpNear(x,y);return nearest>17+rad+4;}
@@ -437,20 +500,27 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
         if(free(x,y,rad)){placed.push([x,y,rad]);add(scen,kind==='tree'?TREE:(kind==='bush'?BUSH:SIGN),x,y,0);break;}}
     }
     // speed table: constant speed along lane, softly kept on screen
-    var vh=innerHeight,maxS=Math.max(1,H-vh),N=320,S=[],lo=vh*0.03,hi=vh*0.97;
-    for(var i=0;i<=N;i++){var pr=i/N,sc=pr*maxS,sv=8+pr*(L-44),yy=lp.getPointAtLength(sv).y-sc,g=0;
-      while(yy<lo&&sv<L-36&&g<400){sv+=8;yy=lp.getPointAtLength(sv).y-sc;g++;}
-      while(yy>hi&&sv>8&&g<800){sv-=8;yy=lp.getPointAtLength(sv).y-sc;g++;}
-      S.push(sv);}
-    for(i=1;i<=N;i++)if(S[i]<S[i-1])S[i]=S[i-1];
-    for(var pass=0;pass<3;pass++){var T=S.slice();for(i=0;i<=N;i++){var a=0,c=0;for(var w=-6;w<=6;w++){var k2=Math.min(N,Math.max(0,i+w));a+=S[k2];c++;}T[i]=a/c;}S=T;}
+    var vh=innerHeight,maxS=Math.max(1,H-vh),N=320,lo=vh*0.07,hi=vh*0.88,S=[];
+    for(var i=0;i<=N;i++)S.push(8+i/N*(L-44));
+    function clampS(){for(var i=0;i<=N;i++){var sc=i/N*maxS,y=lp.getPointAtLength(S[i]).y-sc,g=0;
+        while(y<lo&&S[i]<L-36&&g<500){S[i]+=5;y=lp.getPointAtLength(S[i]).y-sc;g++;}
+        while(y>hi&&S[i]>8&&g<1000){S[i]-=5;y=lp.getPointAtLength(S[i]).y-sc;g++;}}
+      for(i=1;i<=N;i++)if(S[i]<S[i-1])S[i]=S[i-1];}
+    function smooth(w){var T=S.slice();for(var i=0;i<=N;i++){var a=0,c=0;for(var k=-w;k<=w;k++){a+=S[Math.min(N,Math.max(0,i+k))];c++;}T[i]=a/c;}S=T;}
+    for(var it=0;it<14;it++){clampS();smooth(26);}
+    clampS();smooth(12);for(i=0;i<=N;i++)S[i]=Math.max(8,Math.min(L-36,S[i]));
+    var X=window.RK_X||{},xr=document.querySelector('#rk-xing .rk-road');X.sStop=null;
+    if(xr){var rr=docRect(xr),sy=rr.t-24,lo2=0,hi2=L;for(var it=0;it<26;it++){var m2=(lo2+hi2)/2;if(lp.getPointAtLength(m2).y<sy)lo2=m2;else hi2=m2;}X.sStop=lo2;
+      var cp=lp.getPointAtLength(lo2+24),bl=document.createElementNS(NS,'rect');bl.setAttribute('x',(cp.x-15).toFixed(1));bl.setAttribute('y',rr.t);bl.setAttribute('width',30);bl.setAttribute('height',rr.b-rr.t);bl.setAttribute('fill','#2f6fd0');bl.setAttribute('opacity','.9');marks.appendChild(bl);
+      var lt=document.querySelector('#rk-xing .rk-light'),bd=docRect(document.getElementById('rk-xing'));if(lt){lt.style.left=(cp.x-15-30-bd.l).toFixed(0)+'px';}
+      for(var ii=0;ii<=N;ii++){if(S[ii]>=X.sStop){X.lockY=ii/N*maxS;break;}}}
     var keep=TBL&&cur!==null;TBL=S;if(!keep)cur=null;req();
   }
   function sAt(p){var f=p*(TBL.length-1),i=Math.floor(f),t=f-i;return i>=TBL.length-1?TBL[TBL.length-1]:TBL[i]+(TBL[i+1]-TBL[i])*t;}
   function tick(){
     raf=0;if(!on||!TBL)return;
     var max=Math.max(1,document.documentElement.scrollHeight-innerHeight),p=Math.min(1,Math.max(0,scrollY/max));
-    var t=sAt(p);if(cur===null)cur=t;
+    var X=window.RK_X||{},t=sAt(p);if(X.locked&&X.sStop!=null)t=X.sStop;if(cur===null)cur=t;
     var gap=t-cur,step;if(Math.abs(gap)>4000){step=gap;sp=0;}else{sp+=gap*0.075-sp*0.5;step=sp;if(Math.abs(gap)<0.4&&Math.abs(sp)<0.4){step=gap;sp=0;}}
     cur+=step;dist+=Math.abs(step);
     var pt=lp.getPointAtLength(cur),q=lp.getPointAtLength(Math.min(L,cur+8)),b=lp.getPointAtLength(Math.max(0,cur-8));
