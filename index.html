@@ -65,7 +65,8 @@ a{color:inherit}a:hover{color:#15803d}
 #top > section,#om > div{border-radius:20px;overflow:hidden}
 header a[href="#kontakt"]{border-radius:10px}
 @media (max-width:760px){#top > section,#om > div{border-radius:14px}}
-.rk-soc-grid{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px}
+.rk-soc-grid{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:560px){.rk-soc-grid{grid-template-columns:minmax(0,1fr)}}
 .rk-soc{display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-height:150px;padding:24px;border-radius:20px;text-decoration:none;color:#111512;transition:transform .2s ease,background-color .2s ease}
 .rk-soc-name{font-family:'Gloock',Georgia,serif;font-size:32px;line-height:1.05}
 .rk-soc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;font-size:16px}
@@ -333,7 +334,7 @@ a.rk-soc:focus-visible{outline:3px solid #111512;outline-offset:3px}
   </section>
 
   <section id="find" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
-    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
       <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Find os her</h2>
       <p style="margin: 0; max-width: 28em">Følg med i kampen for bedre cykelstier.</p>
     </div>
