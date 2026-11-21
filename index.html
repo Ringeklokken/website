@@ -361,10 +361,10 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     <path d="M-29 0 H-19 M14.5 0 H26.5" stroke="#e4ebe6" stroke-width="2.2" stroke-linecap="round"></path>
     <path d="M-15 0 H10.5" stroke="#e4ebe6" stroke-width="1.5" stroke-linecap="round"></path>
     <path d="M10.5 -6 V6" stroke="#f4f7f5" stroke-width="2" stroke-linecap="round"></path>
-    <path d="M-1 -8.4 L10.5 -6 M-1 8.4 L10.5 6" stroke="#2fb862" stroke-width="1.75" stroke-linecap="round"></path>
+    <path id="rk-arms" d="M-1 -8.4 L10.5 -6 M-1 8.4 L10.5 6" stroke="#2fb862" stroke-width="1.75" stroke-linecap="round"></path>
     <ellipse id="rk-knee-a" cx="-8" cy="-5" rx="3.4" ry="2.2" fill="#1d7a42"></ellipse>
     <ellipse id="rk-knee-b" cx="-8" cy="5" rx="3.4" ry="2.2" fill="#1d7a42"></ellipse>
-    <path d="M-15 -3 C-10 -3 -9 -9 -1 -9 C3 -9 4 -5 4 0 C4 5 3 9 -1 9 C-9 9 -10 3 -15 3 Z" fill="#2fb862"></path>
+    <path id="rk-jersey" d="M-15 -3 C-10 -3 -9 -9 -1 -9 C3 -9 4 -5 4 0 C4 5 3 9 -1 9 C-9 9 -10 3 -15 3 Z" fill="#2fb862"></path>
     <circle cx="4" cy="0" r="3.6" fill="#f4f7f5" stroke="#0f2a1c" stroke-width=".8"></circle>
   </svg>
 </div>
@@ -374,7 +374,9 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var lp=document.getElementById('rk-lane-path'),ls=document.getElementById('rk-lane-stop'),marks=document.getElementById('rk-lane-marks'),fade=document.getElementById('rk-lane-fade'),scen=document.getElementById('rk-scenery');
   var paths=['rk-lane-curb','rk-lane-path','rk-lane-line','rk-lane-inner'].map(function(i){return document.getElementById(i)});
-  var ka=document.getElementById('rk-knee-a'),kb=document.getElementById('rk-knee-b');
+  var ka=document.getElementById('rk-knee-a'),kb=document.getElementById('rk-knee-b'),jer=document.getElementById('rk-jersey'),arms=document.getElementById('rk-arms'),vel=0,lastCol='';
+  var JC=[[0,[47,184,98]],[700,[47,184,98]],[1500,[47,140,224]],[2600,[230,110,40]],[4000,[245,197,24]]],lastY=scrollY,lastT=performance.now();
+  function jcol(v){for(var i=1;i<JC.length;i++){if(v<=JC[i][0]){var a=JC[i-1],b=JC[i],t=(v-a[0])/(b[0]-a[0]);return a[1].map(function(c,k){return Math.round(c+(b[1][k]-c)*t)});}}return JC[JC.length-1][1];}
   var on=false,L=0,cur=null,curAng=90,raf=0,dist=0,TBL=null,NS='http://www.w3.org/2000/svg';
   function docRect(e){var r=e.getBoundingClientRect();return {l:r.left+scrollX,t:r.top+scrollY,r:r.right+scrollX,b:r.bottom+scrollY};}
   function spline(P){var d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
@@ -457,10 +459,12 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     var da=((ang-curAng+540)%360)-180;curAng+=da*0.35;
     el.style.transform='translate('+pt.x.toFixed(1)+'px,'+pt.y.toFixed(1)+'px) rotate('+curAng.toFixed(1)+'deg)';
     var c=Math.sin(dist/8)*2.2;ka.setAttribute('cx',(-8+c).toFixed(2));kb.setAttribute('cx',(-8-c).toFixed(2));
-    if(Math.abs(t-cur)>0.3||Math.abs(da)>0.4)raf=requestAnimationFrame(tick);
+    vel*=0.965;var col=jcol(vel),cs='rgb('+col.join(',')+')';
+    if(cs!==lastCol){lastCol=cs;jer.setAttribute('fill',cs);arms.setAttribute('stroke',cs);var dk='rgb('+col.map(function(x){return Math.round(x*0.62)}).join(',')+')';ka.setAttribute('fill',dk);kb.setAttribute('fill',dk);}
+    if(Math.abs(t-cur)>0.3||Math.abs(da)>0.4||vel>20)raf=requestAnimationFrame(tick);
   }
   function req(){if(on&&!raf)raf=requestAnimationFrame(tick);}
-  addEventListener('scroll',req,{passive:true});
+  addEventListener('scroll',function(){var n=performance.now(),dt=Math.max(16,n-lastT),inst=Math.abs(scrollY-lastY)/dt*1000;lastY=scrollY;lastT=n;vel=Math.max(vel,inst);req();},{passive:true});
   var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,150);});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(build);
   addEventListener('load',build);setTimeout(build,1500);build();
