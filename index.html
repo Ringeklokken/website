@@ -129,38 +129,101 @@ a{color:inherit}a:hover{color:#15803d}
   <section id="tal" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
     <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
       <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Mange cyklister, lidt plads</h2>
-      <p style="margin: 0; max-width: 28em">Næsten halvdelen af københavnerne cykler på arbejde. Alligevel får bilerne otte gange så meget af gaden som cyklerne.</p>
+      <p style="margin: 0; max-width: 28em">Bilen står for hver fjerde tur i København, men får over halvdelen af gaden. Målt pr. tur får bilen næsten ni gange så meget plads som cyklen.</p>
     </div>
     <div style="margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 48px 48px">
       <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
         <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Sådan kommer københavnerne på arbejde</figcaption>
         <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
-            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #15803d; padding-top: 8px">
-              <span style="font-family: 'Gloock', Georgia, serif; font-size: 44px; line-height: 1">47 %</span>
+            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #15803d; padding-top: 8px; min-width: 0">
+              <span style="font-family: 'Gloock', Georgia, serif; font-size: 40px; line-height: 1">47 %</span>
               <span style="font-size: 15px; font-weight: 600">Cykel</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #111512; padding-top: 8px">
-              <span style="font-family: 'Gloock', Georgia, serif; font-size: 44px; line-height: 1">20 %</span>
+            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #111512; padding-top: 8px; min-width: 0">
+              <span style="font-family: 'Gloock', Georgia, serif; font-size: 40px; line-height: 1">20 %</span>
               <span style="font-size: 15px; font-weight: 600">Bil</span>
             </div>
-          </div>
-        <div style="display: flex; height: 48px; width: 100%" role="img" aria-label="Cykel 47 %, Bil 20 %"><div style="width: 70.1%; background: #15803d"></div><div style="width: 29.9%; background: #111512"></div></div>
-        <p style="margin: 0; font-size: 15px">47 % cykler på arbejde eller studie. 20 % tager bilen.</p>
+        </div>
+        <div style="display: flex; gap: 2px; height: 48px; width: 100%" role="img" aria-label="Cykel 47 %, bil 20 %, kollektiv trafik 21 %, gang 12 %"><div style="flex: 47 1 0; min-width: 2px; background: #15803d"></div><div style="flex: 20 1 0; min-width: 2px; background: #111512"></div><div style="flex: 21 1 0; min-width: 2px; background: #8f9c94"></div><div style="flex: 12 1 0; min-width: 2px; background: #d5ddd8"></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #15803d; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Cykel</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">47 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #111512; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Bil</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">20 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #8f9c94; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Kollektiv trafik</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">21 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #d5ddd8; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Gang</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">12 %</span>
+            </div>
+        </div>
+        <p style="margin: 0; font-size: 15px">Næsten halvdelen cykler. Kun hver femte tager bilen.</p>
       </figure>
       <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
         <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Hvem får pladsen på gaden</figcaption>
-        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
-            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #15803d; padding-top: 8px">
-              <span style="font-family: 'Gloock', Georgia, serif; font-size: 44px; line-height: 1">7 %</span>
-              <span style="font-size: 15px; font-weight: 600">Cykler</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #111512; padding-top: 8px">
-              <span style="font-family: 'Gloock', Georgia, serif; font-size: 44px; line-height: 1">57 %</span>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #111512; padding-top: 8px; min-width: 0">
+              <span style="font-family: 'Gloock', Georgia, serif; font-size: 40px; line-height: 1">57 %</span>
               <span style="font-size: 15px; font-weight: 600">Biler</span>
             </div>
-          </div>
-        <div style="display: flex; height: 48px; width: 100%" role="img" aria-label="Cykler 7 %, Biler 57 %"><div style="width: 10.9%; background: #15803d"></div><div style="width: 89.1%; background: #111512"></div></div>
-        <p style="margin: 0; font-size: 15px">Andel af hele arealet mellem husene. Bilerne har kørebaner (49 %) og parkering (8 %). Cyklerne har cykelstier (6 %) og parkering (1 %).</p>
+            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #15803d; padding-top: 8px; min-width: 0">
+              <span style="font-family: 'Gloock', Georgia, serif; font-size: 40px; line-height: 1">7 %</span>
+              <span style="font-size: 15px; font-weight: 600">Cykler</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; border-top: 6px solid #eef2ef; padding-top: 8px; min-width: 0">
+              <span style="font-family: 'Gloock', Georgia, serif; font-size: 40px; line-height: 1">5 %</span>
+              <span style="font-size: 15px; font-weight: 600">Torve og pladser</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 2px; height: 48px; width: 100%" role="img" aria-label="Kørebaner 49 %, bilparkering 8 %, cykelstier 6 %, cykelparkering 1 %, fælles stier 4 %, fortove 27 %, torve og pladser 5 %"><div style="flex: 49 1 0; min-width: 2px; background: #111512"></div><div style="flex: 8 1 0; min-width: 2px; background: #4a5550"></div><div style="flex: 6 1 0; min-width: 2px; background: #15803d"></div><div style="flex: 1 1 0; min-width: 2px; background: #6fbf8a"></div><div style="flex: 4 1 0; min-width: 2px; background: #b9d9c4"></div><div style="flex: 27 1 0; min-width: 2px; background: #d5ddd8"></div><div style="flex: 5 1 0; min-width: 2px; background: #eef2ef"></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #111512; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Kørebaner</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">49 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #4a5550; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Bilparkering</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">8 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #15803d; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Cykelstier og cykelbaner</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">6 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #6fbf8a; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Cykelparkering</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">1 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #b9d9c4; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Fælles cykel- og gangstier</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">4 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #d5ddd8; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Fortove</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">27 %</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; background: #eef2ef; flex: none; box-shadow: inset 0 0 0 1px #11151226"></span>
+              <span style="flex: 1">Torve, pladser mv.</span>
+              <span style="font-weight: 700; font-variant-numeric: tabular-nums">5 %</span>
+            </div>
+        </div>
+        <p style="margin: 0; font-size: 15px">Hele bjælken er arealet mellem husene. Over halvdelen går til biler, mens torve og pladser til ophold får 5 %.</p>
       </figure>
       <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
         <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Cykler og biler, og hvor de holder</figcaption>
@@ -195,7 +258,7 @@ a{color:inherit}a:hover{color:#15803d}
         <p style="margin: 0; font-size: 15px">Der er over fem gange så mange cykler, men bilerne får otte gange så meget parkeringsplads.</p>
       </figure>
     </div>
-    <p style="margin: 32px 0 0; max-width: 62em; font-size: 14px; line-height: 1.55">Kilder: Københavns Kommune, <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-07/Mobilitetsredeg%C3%B8relse%202026_opt-a.pdf">Mobilitetsredegørelse 2026</a> og <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-06/Status%20p%C3%A5%20cykelbyen.pdf">Status på cykelbyen</a>. Arbejdsture: københavnernes ture til og fra arbejde og uddannelse 2025. Gaden: arealet mellem husene 2025. Bilens andel er kørebaner (49 %) og bilparkering (8 %); kørebanerne deles også med busser, varebiler og cyklister, hvor der ikke er cykelsti. Cyklens andel er cykelstier og cykelbaner (6 %) og cykelparkering (1 %). Biler: privatejede biler 2025. Cykler: privatejede cykler 2022/2024. Cirklernes areal svarer til tallene.</p>
+    <p style="margin: 32px 0 0; max-width: 62em; font-size: 14px; line-height: 1.55">Kilder: Københavns Kommune, <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-07/Mobilitetsredeg%C3%B8relse%202026_opt-a.pdf">Mobilitetsredegørelse 2026</a> og <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-06/Status%20p%C3%A5%20cykelbyen.pdf">Status på cykelbyen</a>. Arbejdsture: københavnernes ture til og fra arbejde og uddannelse 2025. Ture: alle ture til, fra og i København 2025 (bil 26 %, cykel 28 %). Gaden: arealet mellem husene 2025; parker og grønne områder indgår ikke. Plads pr. tur: andel af gaden delt med andel af turene (bil 57/26, cykel 7/28). Bilens andel er kørebaner (49 %) og bilparkering (8 %); kørebanerne deles også med busser, varebiler og cyklister, hvor der ikke er cykelsti. Cyklens andel er cykelstier og cykelbaner (6 %) og cykelparkering (1 %). Biler: privatejede biler 2025. Cykler: privatejede cykler 2022/2024. Cirklernes areal svarer til tallene.</p>
   </section>
 
   <section id="find" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
