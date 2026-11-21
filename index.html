@@ -26,7 +26,15 @@ a{color:inherit}a:hover{color:#15803d}
 @keyframes rk-strike{0%,100%{transform:rotate(0)}40%{transform:rotate(14deg)}}
 @keyframes rk-wave{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){.rk-ring .rk-dome,.rk-ring .rk-lever{animation:none}}
-.rk-card{position:sticky;top:16px;min-height:max(340px,min(500px,58svh));overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;gap:20px;padding:24px clamp(24px,5vw,64px) clamp(32px,5vw,56px);color:#ffffff;border-top:1px solid rgba(255,255,255,.22)}
+.rk-split{display:flex;flex-wrap:wrap;align-items:flex-start;gap:32px 64px}
+.rk-split-aside{flex:1 1 280px;position:sticky;top:32px;min-width:0}
+.rk-split-main{flex:2 1 480px;min-width:0}
+.rk-index{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.rk-index a{display:block;padding:8px 0 8px 14px;border-left:3px solid #d5ddd8;text-decoration:none;font-weight:600;transition:color .3s,border-color .3s}
+.rk-index a.is-active{color:#15803d;border-left-color:#15803d}
+.rk-split-aside h2{font-size:clamp(34px,3.4vw,44px)!important}
+.rk-issue{min-height:min(36svh,300px);padding:24px 0 48px;border-top:3px solid #15803d;scroll-margin-top:32px}
+@media (max-width:760px){.rk-split-aside{position:static}.rk-index{display:none}.rk-issue{min-height:0}}
 .js [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:calc(var(--d,0)*80ms)}
 .js [data-reveal].is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.js [data-reveal]{opacity:1;transform:none;transition:none}}
@@ -97,27 +105,34 @@ a{color:inherit}a:hover{color:#15803d}
   </div>
 
   <section id="sager" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
-    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
-      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Det kæmper vi for</h2>
-      
-    </div>
-    <div style="margin-top: 48px; display: flex; flex-direction: column">
-      <article class="rk-card" style="top: calc(16px + 0 * 88px); background: #15803d">
-        <h3 style="margin: 0; max-width: 12em; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; text-wrap: balance">Plads på stierne</h3>
-        <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.3)">De travleste strækninger er for smalle til den trafik, de bærer. Vi vil have bredere cykelstier dér, hvor der er kø hver morgen.</p>
-      </article>
-      <article class="rk-card" style="top: calc(16px + 1 * 88px); background: #0c2a1a">
-        <h3 style="margin: 0; max-width: 12em; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; text-wrap: balance">Sikre kryds</h3>
-        <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.3)">Et kryds skal bygges, så cyklister og svingende biler ikke får grønt i samme sekund. Sikkerhed må ikke afhænge af, at alle ser sig for.</p>
-      </article>
-      <article class="rk-card" style="top: calc(16px + 2 * 88px); background: #15803d">
-        <h3 style="margin: 0; max-width: 12em; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; text-wrap: balance">Parkering, der virker</h3>
-        <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.3)">Ved stationer og handelsgader skal der være stativer nok. Mangler de, ender cyklerne på fortovet, og det går ud over alle.</p>
-      </article>
-      <article class="rk-card" style="top: calc(16px + 3 * 88px); background: #0c2a1a">
-        <h3 style="margin: 0; max-width: 12em; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; text-wrap: balance">Stier, der holder hele året</h3>
-        <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.3)">Huller, glasskår, sne og vejarbejde uden omkørsel. Cykelstierne skal vedligeholdes og ryddes lige så pålideligt som vejene.</p>
-      </article>
+    <div class="rk-split" style="border-top: 1px solid #111512; padding-top: 24px">
+      <div class="rk-split-aside">
+        <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Det kæmper vi for</h2>
+        <ul class="rk-index">
+          <li><a href="#sag-stier" class="is-active">Plads på stierne</a></li>
+          <li><a href="#sag-kryds">Sikre kryds</a></li>
+          <li><a href="#sag-parkering">Parkering, der virker</a></li>
+          <li><a href="#sag-vedligehold">Stier, der holder hele året</a></li>
+        </ul>
+      </div>
+      <div class="rk-split-main">
+        <article id="sag-stier" class="rk-issue">
+          <h3 style="margin: 0 0 14px; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 52px); line-height: 1.05; text-wrap: balance">Plads på stierne</h3>
+          <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55">De travleste strækninger er for smalle til den trafik, de bærer. Vi vil have bredere cykelstier dér, hvor der er kø hver morgen.</p>
+        </article>
+        <article id="sag-kryds" class="rk-issue">
+          <h3 style="margin: 0 0 14px; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 52px); line-height: 1.05; text-wrap: balance">Sikre kryds</h3>
+          <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55">Et kryds skal bygges, så cyklister og svingende biler ikke får grønt i samme sekund. Sikkerhed må ikke afhænge af, at alle ser sig for.</p>
+        </article>
+        <article id="sag-parkering" class="rk-issue">
+          <h3 style="margin: 0 0 14px; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 52px); line-height: 1.05; text-wrap: balance">Parkering, der virker</h3>
+          <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55">Ved stationer og handelsgader skal der være stativer nok. Mangler de, ender cyklerne på fortovet, og det går ud over alle.</p>
+        </article>
+        <article id="sag-vedligehold" class="rk-issue">
+          <h3 style="margin: 0 0 14px; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 52px); line-height: 1.05; text-wrap: balance">Stier, der holder hele året</h3>
+          <p style="margin: 0; max-width: 34em; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55">Huller, glasskår, sne og vejarbejde uden omkørsel. Cykelstierne skal vedligeholdes og ryddes lige så pålideligt som vejene.</p>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -327,12 +342,19 @@ a{color:inherit}a:hover{color:#15803d}
 <script>
 (function(){
   var root=document.documentElement;
-  var sel=['#sager > div:first-child','#om > div','#tal > div:first-child','#tal figure','#tal > p','#find > div:first-child','#find > div:last-child > *','#kontakt > div:first-child','#kontakt > div:last-child > *'];
+  var sel=['#sager .rk-split-aside','#sager .rk-issue','#om > div','#tal > div:first-child','#tal figure','#tal > p','#find > div:first-child','#find > div:last-child > *','#kontakt > div:first-child','#kontakt > div:last-child > *'];
   var els=[];
   sel.forEach(function(s){Array.prototype.forEach.call(document.querySelectorAll(s),function(el,i){el.setAttribute('data-reveal','');el.style.setProperty('--d',Math.min(i,4));els.push(el);});});
   if(!('IntersectionObserver' in window)){els.forEach(function(el){el.classList.add('is-in')});return;}
   var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:0.12});
   els.forEach(function(el){io.observe(el)});
+
+  var links=document.querySelectorAll('.rk-index a');
+  if(links.length&&('IntersectionObserver' in window)){
+    var map={};Array.prototype.forEach.call(links,function(a){map[a.getAttribute('href').slice(1)]=a;});
+    var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){Array.prototype.forEach.call(links,function(a){a.classList.remove('is-active')});var a=map[e.target.id];if(a)a.classList.add('is-active');}});},{rootMargin:'-35% 0px -60% 0px'});
+    Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)spy.observe(el);});
+  }
 })();
 </script>
 </body>
