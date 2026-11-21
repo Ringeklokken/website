@@ -5,349 +5,309 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ringeklokken</title>
 <meta name="description" content="Ringeklokken arbejder for bedre vilkår for alle, der cykler i København.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap">
+<link rel="preload" href="fonts/gloock-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-html { scroll-behavior: smooth; }
-body { margin: 0; }
-img { max-width: 100%; }
-/* Layout: magasin. Navnet står som et bladhoved i fuld bredde, forsiden er én grøn flade med overskrift og klokke, og resten er hvidt papir med tynde streger, små rubrikker og store serif-overskrifter. Skarpe hjørner hele vejen. */
-:root {
-  --paper: #ffffff;
-  --ink: #111512;
-  --muted: #55605a;
-  --rule: #111512;
-  --hair: #11151226;
-  --green: #15803d;
-  --green-deep: #0c2a1a;
-  --tint: #edf5ef;
-  --on-green: #ffffff;
-  --on-green-muted: #dff1e5;
-  --on-deep-muted: #b9cec2;
-  --deep-hair: #ffffff33;
-  --chrome: #eef2ef;
-  --chrome-shade: #b9c6be;
-  --chrome-light: #ffffff;
-  --display: "Gloock", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
-  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --wrap: 1240px;
-  color-scheme: light;
-}
-* { box-sizing: border-box; }
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
-.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
-h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: -.01em; text-wrap: balance; margin: 0; line-height: 1.04; }
-p { margin: 0; }
-a { color: inherit; }
-a:focus-visible, button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
-.label { font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-
-/* Bladhoved */
-.util { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 28px; padding-block: 16px; }
-.util .label { color: var(--muted); }
-.nav { display: flex; flex-wrap: wrap; gap: 6px 26px; }
-.nav a { text-decoration: none; }
-.nav a:hover { color: var(--green); }
-.nameplate { display: block; overflow: hidden; border-top: 1px solid var(--rule); border-bottom: 4px solid var(--rule); padding-block: .04em .1em; text-decoration: none; color: var(--green); font-family: var(--display); font-size: min(13vw, 168px); line-height: 1; letter-spacing: -.02em; white-space: nowrap; }
-.nameplate span { display: inline-block; }
-
-/* Forside */
-.cover { background: var(--green); color: var(--on-green); margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; }
-.cover-text { padding: clamp(28px, 5vw, 64px); min-width: 0; }
-.cover-text .label { color: var(--on-green-muted); margin-bottom: 20px; }
-.cover h1 { font-size: clamp(2.3rem, 5.4vw, 4.5rem); }
-.lead { font-size: 1.18rem; color: var(--on-green-muted); max-width: 31em; margin-top: 22px; }
-.cover-links { display: flex; flex-wrap: wrap; gap: 10px 30px; margin-top: 30px; }
-.cover-links a { font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--on-green); padding-bottom: 3px; }
-.cover-links a:hover { border-bottom-color: transparent; }
-.cover-bell { padding: clamp(12px, 3vw, 40px); min-width: 0; }
-.bell-btn { display: block; background: none; border: 0; padding: 0; cursor: pointer; width: 100%; max-width: 460px; margin-inline: auto; color: var(--on-green); }
-.bell-btn svg { width: 100%; height: auto; display: block; }
-.caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 20px; padding-block: 10px; border-bottom: 1px solid var(--hair); font-size: .88rem; color: var(--muted); }
-.wave { fill: none; stroke: currentColor; stroke-width: 5; stroke-linecap: round; opacity: 0; }
-.dome { transform-origin: 110px 124px; }
-.lever { transform-origin: 158px 130px; transition: transform .12s ease-out; }
-.bell-btn:hover .lever { transform: rotate(5deg); }
-.ringing .dome { animation: shake .55s ease-out; }
-.ringing .lever { animation: strike .28s ease-out; }
-.ringing .wave { animation: wave .8s ease-out; }
-.ringing .wave.w2 { animation-delay: .12s; }
-@keyframes shake { 0%,100% { transform: rotate(0); } 18% { transform: rotate(-4deg); } 45% { transform: rotate(3deg); } 75% { transform: rotate(-1.5deg); } }
-@keyframes strike { 0%,100% { transform: rotate(0); } 40% { transform: rotate(14deg); } }
-@keyframes wave { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .ringing .dome, .ringing .lever { animation: none; } .bell-btn:hover .lever { transform: none; } }
-
-/* Sektionshoved */
-.sec { padding-block: clamp(56px, 8vw, 104px) 0; }
-.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 10px 32px; align-items: baseline; border-top: 4px solid var(--rule); padding-top: 16px; }
-.sec-head .label { color: var(--green); }
-.sec-head h2 { font-size: clamp(2rem, 4.6vw, 3.6rem); }
-.sec-head p { grid-column: 2; color: var(--muted); font-size: 1.1rem; max-width: 34em; margin-top: 6px; }
-
-/* Mærkesager */
-.issues { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 44px; border-top: 1px solid var(--rule); }
-.issue { padding: 22px 24px 28px; border-left: 1px solid var(--hair); min-width: 0; }
-.issue:first-child { border-left: 0; padding-left: 0; }
-.issue:last-child { padding-right: 0; }
-.issue .label { color: var(--green); display: block; margin-bottom: 14px; }
-.issue h3 { font-size: clamp(1.5rem, 2.3vw, 1.95rem); margin-bottom: 12px; }
-.issue p { color: var(--muted); font-size: .98rem; }
-
-/* Om os */
-.about { background: var(--green-deep); color: var(--on-green); margin-top: clamp(56px, 8vw, 104px); }
-.about .wrap { padding-block: clamp(56px, 8vw, 104px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 16px 32px; }
-.about .label { color: var(--on-deep-muted); padding-top: 14px; }
-.about h2 { font-size: clamp(2.2rem, 5.6vw, 4.6rem); }
-.about-text { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 40px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--deep-hair); }
-.about-text p { color: var(--on-deep-muted); font-size: 1.06rem; }
-
-/* Sociale medier */
-.social-list { margin-top: 44px; border-top: 1px solid var(--rule); }
-.social-item { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 24px; padding-block: 20px; border-bottom: 1px solid var(--hair); text-decoration: none; }
-.social-item .name { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; }
-.social-item .handle { font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
-a.social-item:hover .name { color: var(--green); }
-a.social-item .handle::after { content: " \2197"; color: var(--green); }
-.social-item.soon .name { color: var(--muted); }
-
-/* Følg med */
-.ways { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 44px; border-top: 1px solid var(--rule); }
-.way { padding: 22px 32px 0 0; min-width: 0; }
-.way + .way { padding: 22px 0 0 32px; border-left: 1px solid var(--hair); }
-.way h3 { font-size: 1.7rem; margin-bottom: 10px; }
-.way p { color: var(--muted); }
-.way .val { color: var(--ink); font-weight: 700; user-select: all; overflow-wrap: anywhere; }
-
-footer { margin-top: clamp(56px, 8vw, 104px); background: var(--tint); }
-footer .wrap { padding-block: 28px 36px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; font-size: .9rem; color: var(--muted); }
-footer .foot-name { font-family: var(--display); font-size: 1.6rem; color: var(--green); }
-
-@media (max-width: 980px) {
-  .issues { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .issue { border-bottom: 1px solid var(--hair); }
-  .issue:nth-child(odd) { border-left: 0; padding-left: 0; }
-  .issue:nth-child(even) { padding-right: 0; }
-}
-@media (max-width: 760px) {
-  .cover { grid-template-columns: minmax(0, 1fr); margin-top: 20px; }
-  .cover-bell { order: -1; padding: 24px 24px 0; }
-  .bell-btn { max-width: 300px; }
-  .sec-head, .about .wrap, .about-text, .ways { grid-template-columns: minmax(0, 1fr); }
-  .sec-head p { grid-column: 1; }
-  .about .label { padding-top: 0; }
-  .issues { grid-template-columns: minmax(0, 1fr); }
-  .issue, .issue:nth-child(even) { border-left: 0; padding-inline: 0; }
-  .way, .way + .way { padding: 22px 0 0; border-left: 0; }
-  .way + .way { margin-top: 22px; border-top: 1px solid var(--hair); }
-}
+@font-face{font-family:'Gloock';font-weight:400;font-display:swap;src:url(fonts/gloock-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Figtree';font-weight:400;font-display:swap;src:url(fonts/figtree-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Figtree';font-weight:600;font-display:swap;src:url(fonts/figtree-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Figtree';font-weight:700;font-display:swap;src:url(fonts/figtree-latin-700-normal.woff2) format('woff2')}
+html{scroll-behavior:smooth}*{box-sizing:border-box}img,svg{max-width:100%}
+body{margin:0}
+a{color:inherit}a:hover{color:#15803d}
+.rk-dome{transform-origin:110px 124px}
+.rk-lever{transform-origin:158px 130px}
+.rk-ring .rk-dome{animation:rk-shake .55s ease-out}
+.rk-ring .rk-lever{animation:rk-strike .28s ease-out}
+.rk-ring .rk-wave{animation:rk-wave .8s ease-out}
+.rk-ring .rk-wave2{animation:rk-wave .8s ease-out .12s}
+.rk-wave,.rk-wave2{opacity:0}
+@keyframes rk-shake{0%,100%{transform:rotate(0)}18%{transform:rotate(-4deg)}45%{transform:rotate(3deg)}75%{transform:rotate(-1.5deg)}}
+@keyframes rk-strike{0%,100%{transform:rotate(0)}40%{transform:rotate(14deg)}}
+@keyframes rk-wave{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.rk-ring .rk-dome,.rk-ring .rk-lever{animation:none}}
 </style>
 </head>
 <body>
-<header class="wrap" id="top">
-  <div class="util">
-    <span class="label">Cyklisternes stemme i København</span>
-    <nav class="nav label" aria-label="Hovedmenu">
-      <a href="#sager">Mærkesager</a>
-      <a href="#om">Om os</a>
-      <a href="#sociale-medier">Sociale medier</a>
-      <a href="#med">Følg med</a>
-    </nav>
-  </div>
-  <a class="nameplate" id="nameplate" href="#top" aria-label="Ringeklokken"><span>Ringeklokken</span></a>
-</header>
+<div style="width: 100%; min-height: 100%; background: #ffffff; color: #111512; font-family: 'Figtree', system-ui, sans-serif; font-size: 18px; line-height: 1.6">
 
-<main>
-  <div class="wrap">
-    <section class="cover">
-      <div class="cover-text">
-        <p class="label">Interesseorganisation for cyklister</p>
-        <h1>Vi ringer med klokken, når byen glemmer cyklerne.</h1>
-        <p class="lead">Ringeklokken arbejder for bedre vilkår for alle, der cykler i København. Bredere stier, sikrere kryds og plads til at parkere.</p>
-        <div class="cover-links">
-          <a href="#sager">Se mærkesagerne</a>
-          <a href="#med">Følg med fra starten</a>
+  <header style="border-bottom: 1px solid #111512">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 12px clamp(20px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px">
+      <nav aria-label="Hovedmenu" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; font-size: 16px; font-weight: 600">
+        <a href="#sager" style="text-decoration: none">Mærkesager</a>
+        <a href="#om" style="text-decoration: none">Om os</a>
+        <a href="#find" style="text-decoration: none">Sociale medier</a>
+      </nav>
+      <a href="#kontakt" style="text-decoration: none; background: #15803d; color: #ffffff; padding: 10px 18px; font-size: 16px; font-weight: 600">Kontakt os</a>
+    </div>
+  </header>
+
+  <div id="top" style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px)">
+    <div style="container-type: inline-size; padding-top: 24px; border-bottom: 3px solid #111512">
+      <p style="margin: 0; font-family: 'Gloock', Georgia, serif; font-size: 16cqw; line-height: 1; color: #15803d; white-space: nowrap; letter-spacing: -0.02em; padding-bottom: 0.06em">Ringeklokken</p>
+    </div>
+
+    <section style="margin-top: 28px; background: #15803d; color: #ffffff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px; padding: clamp(28px, 5vw, 64px)">
+      <div style="flex: 1.3 1 440px; min-width: 0">
+        <h1 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(40px, 5.4vw, 72px); line-height: 1.04; text-wrap: balance">Vi ringer med klokken, når byen glemmer cyklerne.</h1>
+        <p style="margin: 24px 0 0; max-width: 31em; font-size: 19px">Ringeklokken arbejder for bedre vilkår for alle, der cykler i København. Bredere stier, sikrere kryds og plads til at parkere.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 30px; font-weight: 700">
+          <a href="#sager" style="color: #ffffff; text-decoration: none; border-bottom: 2px solid #ffffff; padding-bottom: 3px">Se mærkesagerne</a>
+          <a href="#kontakt" style="color: #ffffff; text-decoration: none; border-bottom: 2px solid #ffffff; padding-bottom: 3px">Følg med fra starten</a>
         </div>
       </div>
-      <div class="cover-bell">
-        <button class="bell-btn" id="bell" type="button" aria-label="Ring med klokken">
-          <svg viewBox="0 0 300 190" aria-hidden="true">
-            <defs>
-              <clipPath id="dome-clip"><path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z"/></clipPath>
-            </defs>
-            <path class="wave w1" d="M44 58 Q30 70 26 88"/>
-            <path class="wave w2" d="M28 40 Q8 62 4 88"/>
-            <path class="wave w1" d="M176 58 Q190 70 194 88"/>
-            <path class="wave w2" d="M192 40 Q212 62 216 88"/>
-            <rect x="6" y="150" width="204" height="16" rx="8" fill="var(--chrome)" stroke="var(--green-deep)" stroke-width="4"/>
-            <path d="M18 155 H186" stroke="var(--chrome-light)" stroke-width="3" stroke-linecap="round" fill="none"/>
-            <rect x="200" y="143" width="96" height="30" rx="11" fill="var(--green-deep)"/>
-            <rect x="194" y="139" width="12" height="38" rx="5" fill="var(--green-deep)"/>
-            <g stroke="var(--green)" stroke-width="3" stroke-linecap="round" fill="none">
-              <path d="M220 150 V166"/><path d="M234 150 V166"/><path d="M248 150 V166"/><path d="M262 150 V166"/><path d="M276 150 V166"/>
+      <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px">
+        <button type="button" id="bell" aria-label="Ring med klokken" style="background: none; border: 0; padding: 0; cursor: pointer; width: 100%; max-width: 440px">
+          <svg id="bell-svg" viewBox="0 0 300 190" style="width: 100%; height: auto; display: block" aria-hidden="true">
+            <path class="rk-wave" d="M44 58 Q30 70 26 88" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"></path>
+            <path class="rk-wave2" d="M28 40 Q8 62 4 88" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"></path>
+            <path class="rk-wave" d="M176 58 Q190 70 194 88" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"></path>
+            <path class="rk-wave2" d="M192 40 Q212 62 216 88" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"></path>
+            <rect x="6" y="150" width="204" height="16" rx="8" fill="#eef2ef" stroke="#0c2a1a" stroke-width="4"></rect>
+            <path d="M18 155 H186" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"></path>
+            <rect x="200" y="143" width="96" height="30" rx="11" fill="#0c2a1a"></rect>
+            <rect x="194" y="139" width="12" height="38" rx="5" fill="#0c2a1a"></rect>
+            <g stroke="#15803d" stroke-width="3" stroke-linecap="round" fill="none">
+              <path d="M220 150 V166"></path><path d="M234 150 V166"></path><path d="M248 150 V166"></path><path d="M262 150 V166"></path><path d="M276 150 V166"></path>
             </g>
-            <rect x="95" y="143" width="30" height="30" rx="6" fill="var(--green-deep)"/>
-            <rect x="101" y="122" width="18" height="26" fill="var(--green-deep)"/>
-            <g class="lever">
-              <path d="M158 130 L204 119" stroke="var(--green-deep)" stroke-width="9" stroke-linecap="round" fill="none"/>
-              <ellipse cx="212" cy="116" rx="17" ry="9" transform="rotate(-14 212 116)" fill="var(--green-deep)"/>
+            <rect x="95" y="143" width="30" height="30" rx="6" fill="#0c2a1a"></rect>
+            <rect x="101" y="122" width="18" height="26" fill="#0c2a1a"></rect>
+            <g class="rk-lever">
+              <path d="M158 130 L204 119" stroke="#0c2a1a" stroke-width="9" stroke-linecap="round" fill="none"></path>
+              <ellipse cx="212" cy="116" rx="17" ry="9" transform="rotate(-14 212 116)" fill="#0c2a1a"></ellipse>
             </g>
-            <g class="dome">
-              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="var(--chrome)"/>
-              <g clip-path="url(#dome-clip)" fill="none" stroke-linecap="round">
-                <path d="M152 74 C168 88 170 104 166 122" stroke="var(--chrome-shade)" stroke-width="16"/>
-                <path d="M68 106 C68 88 80 76 94 72" stroke="var(--chrome-light)" stroke-width="9"/>
-              </g>
-              <path d="M52 109 A62 15 0 0 0 168 109" stroke="var(--green-deep)" stroke-width="3" fill="none"/>
-              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="none" stroke="var(--green-deep)" stroke-width="5" stroke-linejoin="round"/>
-              <ellipse cx="110" cy="66" rx="12" ry="5" fill="var(--green-deep)"/>
-              <rect x="105" y="55" width="10" height="11" rx="3" fill="var(--green-deep)"/>
+            <g class="rk-dome">
+              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="#eef2ef"></path>
+              <path d="M150 78 C163 90 167 103 166 116" stroke="#b9c6be" stroke-width="12" stroke-linecap="round" fill="none"></path>
+              <path d="M68 106 C68 88 80 76 94 72" stroke="#ffffff" stroke-width="9" stroke-linecap="round" fill="none"></path>
+              <path d="M52 109 A62 15 0 0 0 168 109" stroke="#0c2a1a" stroke-width="3" fill="none"></path>
+              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="none" stroke="#0c2a1a" stroke-width="5" stroke-linejoin="round"></path>
+              <ellipse cx="110" cy="66" rx="12" ry="5" fill="#0c2a1a"></ellipse>
+              <rect x="105" y="55" width="10" height="11" rx="3" fill="#0c2a1a"></rect>
             </g>
           </svg>
         </button>
+        <span style="font-size: 15px; font-weight: 600">Tryk på klokken</span>
       </div>
     </section>
-    <p class="caption"><span>Tryk på klokken, og hør den ringe.</span><span>København</span></p>
   </div>
 
-  <section class="sec wrap" id="sager">
-    <div class="sec-head">
-      <span class="label">Mærkesager</span>
-      <h2>Det kæmper vi for</h2>
-      <p>København kalder sig cykelby. Det forpligter. Her er de fire ting, vi vil holde byen op på.</p>
+  <section id="sager" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
+    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
+      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Det kæmper vi for</h2>
+      
     </div>
-    <div class="issues">
-      <article class="issue">
-        <span class="label">Fremkommelighed</span>
-        <h3>Plads på stierne</h3>
-        <p>De travleste strækninger er for smalle til den trafik, de bærer. Vi vil have bredere cykelstier dér, hvor der er kø hver morgen.</p>
+    <div style="margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 40px 32px">
+      <article style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 10px; font-size: 22px; font-weight: 700; line-height: 1.25">Plads på stierne</h3>
+        <p style="margin: 0; font-size: 17px">De travleste strækninger er for smalle til den trafik, de bærer. Vi vil have bredere cykelstier dér, hvor der er kø hver morgen.</p>
       </article>
-      <article class="issue">
-        <span class="label">Sikkerhed</span>
-        <h3>Sikre kryds</h3>
-        <p>Et kryds skal bygges, så cyklister og svingende biler ikke får grønt i samme sekund. Sikkerhed må ikke afhænge af, at alle ser sig for.</p>
+      <article style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 10px; font-size: 22px; font-weight: 700; line-height: 1.25">Sikre kryds</h3>
+        <p style="margin: 0; font-size: 17px">Et kryds skal bygges, så cyklister og svingende biler ikke får grønt i samme sekund. Sikkerhed må ikke afhænge af, at alle ser sig for.</p>
       </article>
-      <article class="issue">
-        <span class="label">Parkering</span>
-        <h3>Parkering, der virker</h3>
-        <p>Ved stationer og handelsgader skal der være stativer nok. Mangler de, ender cyklerne på fortovet, og det går ud over alle.</p>
+      <article style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 10px; font-size: 22px; font-weight: 700; line-height: 1.25">Parkering, der virker</h3>
+        <p style="margin: 0; font-size: 17px">Ved stationer og handelsgader skal der være stativer nok. Mangler de, ender cyklerne på fortovet, og det går ud over alle.</p>
       </article>
-      <article class="issue">
-        <span class="label">Vedligehold</span>
-        <h3>Stier, der holder hele året</h3>
-        <p>Huller, glasskår, sne og vejarbejde uden omkørsel. Cykelstierne skal vedligeholdes og ryddes lige så pålideligt som vejene.</p>
+      <article style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 10px; font-size: 22px; font-weight: 700; line-height: 1.25">Stier, der holder hele året</h3>
+        <p style="margin: 0; font-size: 17px">Huller, glasskår, sne og vejarbejde uden omkørsel. Cykelstierne skal vedligeholdes og ryddes lige så pålideligt som vejene.</p>
       </article>
     </div>
   </section>
 
-  <section class="about" id="om">
-    <div class="wrap">
-      <span class="label">Om os</span>
-      <div>
-        <h2>En ny stemme for dem på to hjul</h2>
-        <div class="about-text">
-          <p>Ringeklokken er en helt ny organisation. Vi er startet, fordi cyklisterne fylder meget i Københavns gader og for lidt, når byens plads og penge bliver fordelt.</p>
-          <p>Vi er uafhængige af partier og taler kun cyklisternes sag. Målet er enkelt: Det skal være hurtigt, trygt og nemt at cykle i København, uanset om du er syv eller halvfjerds.</p>
-        </div>
+  <section id="om" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
+    <div style="background: #0c2a1a; color: #ffffff; padding: clamp(28px, 5vw, 64px)">
+      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.06">En stemme for dem på to hjul</h2>
+      <div style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px 48px">
+        <p style="margin: 0">Ringeklokken er en helt ny organisation. Vi er startet, fordi cyklisterne fylder meget i Københavns gader og for lidt, når byens plads og penge bliver fordelt.</p>
+        <p style="margin: 0">Vi er uafhængige af partier og taler kun cyklisternes sag. Målet er enkelt: Det skal være hurtigt, trygt og nemt at cykle i København, uanset om du er syv eller halvfjerds.</p>
       </div>
     </div>
   </section>
 
-  <section class="sec wrap" id="sociale-medier">
-    <div class="sec-head">
-      <span class="label">Sociale medier</span>
-      <h2>Find os her</h2>
-      <p>Her deler vi nyt fra cykelstierne og fortæller, hvad vi arbejder på.</p>
+  <section id="tal" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
+    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
+      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Mange cyklister, lidt plads</h2>
+      <p style="margin: 0; max-width: 28em">Næsten halvdelen af københavnerne cykler på arbejde. Alligevel får bilerne otte gange så meget af gaden som cyklerne.</p>
     </div>
-    <div class="social-list">
-      <a class="social-item" href="https://www.instagram.com/ringeklokken/" target="_blank" rel="noopener">
-        <span class="name">Instagram</span>
-        <span class="handle">@Ringeklokken</span>
+    <div style="margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 48px 48px">
+      <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Sådan kommer københavnerne på arbejde</figcaption>
+        <div style="display: flex; flex-direction: column; gap: 20px">
+            <div style="position: relative; width: 210px; max-width: 100%; aspect-ratio: 1; margin: 0 auto">
+              <svg viewBox="0 0 42 42" style="width: 100%; height: 100%; display: block" aria-hidden="true">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#15803d" stroke-width="7" stroke-dasharray="47 53" stroke-dashoffset="0" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#111512" stroke-width="7" stroke-dasharray="20 80" stroke-dashoffset="-47" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#8f9c94" stroke-width="7" stroke-dasharray="21 79" stroke-dashoffset="-67" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#d5ddd8" stroke-width="7" stroke-dasharray="12 88" stroke-dashoffset="-88" transform="rotate(-90 21 21)"></circle>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center">
+                <span style="font-family: 'Gloock', Georgia, serif; font-size: 42px; line-height: 1">47 %</span>
+                <span style="font-size: 14px; font-weight: 600; margin-top: 4px">cykler</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #15803d; flex: none"></span>
+                <span style="flex: 1">Cykel</span>
+                <span style="font-weight: 700; font-variant-numeric: tabular-nums">47 %</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #111512; flex: none"></span>
+                <span style="flex: 1">Bil</span>
+                <span style="font-weight: 700; font-variant-numeric: tabular-nums">20 %</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #8f9c94; flex: none"></span>
+                <span style="flex: 1">Kollektiv trafik</span>
+                <span style="font-weight: 700; font-variant-numeric: tabular-nums">21 %</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: #d5ddd8; flex: none"></span>
+                <span style="flex: 1">Gang</span>
+                <span style="font-weight: 700; font-variant-numeric: tabular-nums">12 %</span>
+              </div>
+            </div>
+          </div>
+        <p style="margin: 0; font-size: 15px">Næsten halvdelen cykler på arbejde eller studie.</p>
+      </figure>
+      <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Ture og plads på gaden</figcaption>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="width: 150px; max-width: 100%; aspect-ratio: 1">
+              <svg viewBox="0 0 42 42" style="width: 100%; height: 100%; display: block" aria-hidden="true">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#15803d" stroke-width="7" stroke-dasharray="28 72" stroke-dashoffset="0" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#111512" stroke-width="7" stroke-dasharray="26 74" stroke-dashoffset="-28" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#8f9c94" stroke-width="7" stroke-dasharray="21 79" stroke-dashoffset="-54" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#d5ddd8" stroke-width="7" stroke-dasharray="25 75" stroke-dashoffset="-75" transform="rotate(-90 21 21)"></circle>
+              </svg>
+              </div>
+              <span style="font-size: 15px; font-weight: 700">Alle ture</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <div style="width: 150px; max-width: 100%; aspect-ratio: 1">
+              <svg viewBox="0 0 42 42" style="width: 100%; height: 100%; display: block" aria-hidden="true">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#15803d" stroke-width="7" stroke-dasharray="7 93" stroke-dashoffset="0" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#111512" stroke-width="7" stroke-dasharray="57 43" stroke-dashoffset="-7" transform="rotate(-90 21 21)"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#d5ddd8" stroke-width="7" stroke-dasharray="36 64" stroke-dashoffset="-64" transform="rotate(-90 21 21)"></circle>
+              </svg>
+              </div>
+              <span style="font-size: 15px; font-weight: 700">Arealet på gaden</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+            <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 56px 56px; align-items: center; gap: 10px; font-size: 14px; font-weight: 600">
+              <span></span><span></span><span style="text-align: right">Ture</span><span style="text-align: right">Gaden</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 56px 56px; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #15803d"></span><span>Cykel</span><span style="text-align: right; font-weight: 700">28 %</span><span style="text-align: right; font-weight: 700">7 %</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 56px 56px; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #111512"></span><span>Bil</span><span style="text-align: right; font-weight: 700">26 %</span><span style="text-align: right; font-weight: 700">57 %</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 56px 56px; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #8f9c94"></span><span>Kollektiv trafik</span><span style="text-align: right; font-weight: 700">21 %</span><span style="text-align: right">–</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 56px 56px; align-items: center; gap: 10px">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #d5ddd8"></span><span>Gang</span><span style="text-align: right; font-weight: 700">25 %</span><span style="text-align: right; font-weight: 700">36 %</span>
+            </div>
+          </div>
+        <p style="margin: 0; font-size: 15px">Cyklerne står for lidt flere ture end bilerne, men får en ottendedel af pladsen.</p>
+      </figure>
+      <figure style="margin: 0; border-top: 3px solid #15803d; padding-top: 18px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <figcaption style="font-size: 22px; font-weight: 700; line-height: 1.25">Cykler og biler, og hvor de holder</figcaption>
+        <div style="display: flex; flex-direction: column; gap: 28px">
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 16px; font-weight: 700">Antal</span>
+              <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; min-height: 120px">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+                  <div style="width: 120px; height: 120px; border-radius: 50%; background: #15803d"></div>
+                  <span style="font-size: 15px; text-align: center"><b>744.500</b><br>cykler</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+                  <div style="width: 52px; height: 52px; border-radius: 50%; background: #111512"></div>
+                  <span style="font-size: 15px; text-align: center"><b>139.200</b><br>biler</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 16px; font-weight: 700">Parkeringsareal</span>
+              <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; min-height: 120px">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+                  <div style="width: 42px; height: 42px; border-radius: 50%; background: #15803d"></div>
+                  <span style="font-size: 15px; text-align: center"><b>1 %</b><br>cykler</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+                  <div style="width: 120px; height: 120px; border-radius: 50%; background: #111512"></div>
+                  <span style="font-size: 15px; text-align: center"><b>8 %</b><br>biler</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <p style="margin: 0; font-size: 15px">Der er over fem gange så mange cykler, men bilerne får otte gange så meget parkeringsplads.</p>
+      </figure>
+    </div>
+    <p style="margin: 32px 0 0; max-width: 62em; font-size: 14px; line-height: 1.55">Kilder: Københavns Kommune, <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-07/Mobilitetsredeg%C3%B8relse%202026_opt-a.pdf">Mobilitetsredegørelse 2026</a> og <a target="_blank" rel="noopener" href="https://byudvikling.kk.dk/sites/default/files/2026-06/Status%20p%C3%A5%20cykelbyen.pdf">Status på cykelbyen</a>. Arbejdsture: københavnernes ture til og fra arbejde og uddannelse 2025. Ture: alle ture til, fra og i København 2025 (DTU Transportvaneundersøgelsen). Gaden: arealet mellem husene 2025. Bilens andel er kørebaner (49 %) og bilparkering (8 %); kørebanerne deles også med busser, varebiler og cyklister, hvor der ikke er cykelsti. Cyklens andel er cykelstier og cykelbaner (6 %) og cykelparkering (1 %). Gang er fortove, torve og pladser (32 %) og fælles gang- og cykelstier (4 %). Biler: privatejede biler 2025. Cykler: privatejede cykler 2022/2024. Cirklernes areal svarer til tallene.</p>
+  </section>
+
+  <section id="find" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
+    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
+      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Find os her</h2>
+      <p style="margin: 0; max-width: 28em"><br></p>
+    </div>
+    <div style="margin-top: 40px; display: flex; flex-direction: column">
+      <a target="_blank" rel="noopener" href="https://www.instagram.com/ringeklokken/" style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; text-decoration: none">
+        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">Instagram</span>
+        <span style="font-weight: 700; color: #15803d">@Ringeklokken ↗</span>
       </a>
-      <div class="social-item">
-        <span class="name">LinkedIn</span>
-        <span class="handle">Ringeklokken</span>
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512">
+        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">LinkedIn</span>
+        <span style="font-weight: 700; color: #15803d">Ringeklokken</span>
       </div>
-      <a class="social-item" href="https://x.com/RingeklokkenDK" target="_blank" rel="noopener">
-        <span class="name">X</span>
-        <span class="handle">@RingeklokkenDK</span>
+      <a target="_blank" rel="noopener" href="https://x.com/RingeklokkenDK" style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; text-decoration: none">
+        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">X</span>
+        <span style="font-weight: 700; color: #15803d">@RingeklokkenDK ↗</span>
       </a>
-      <div class="social-item soon">
-        <span class="name">Facebook</span>
-        <span class="handle">Ringeklokken · kommer snart</span>
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; border-bottom: 1px solid #111512">
+        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">Facebook</span>
+        <span style="font-weight: 700; color: #15803d">Kommer snart</span>
       </div>
     </div>
   </section>
 
-  <section class="sec wrap" id="med">
-    <div class="sec-head">
-      <span class="label">Følg med</span>
-      <h2>Følg med fra starten</h2>
-      <p>Vi er ved at bygge fundamentet. Tilmelding og medlemskab åbner, når det er på plads. Indtil da kan du følge os på de sociale medier og skrive til os, hvis du vil hjælpe til.</p>
+  <section id="kontakt" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px)">
+    <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
+      <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Følg med fra starten</h2>
+      
     </div>
-    <div class="ways">
-      <div class="way">
-        <h3>Medlemskab</h3>
-        <p>Åbner senere. Vi siger til her på siden og på de sociale medier.</p>
+    <div style="margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px 48px">
+      <div style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 8px; font-size: 22px; font-weight: 700; line-height: 1.25">Medlemskab</h3>
+        <p style="margin: 0">Mulighed for medlemskab åbner senere.</p>
       </div>
-      <div class="way">
-        <h3>Kontakt</h3>
-        <p>Kender du et sted, der bør laves om? Skriv til os.<br><span class="val">kontakt@ringeklokken.dk</span></p>
+      <div style="border-top: 3px solid #15803d; padding-top: 18px">
+        <h3 style="margin: 0 0 8px; font-size: 22px; font-weight: 700; line-height: 1.25">Kontakt</h3>
+        <p style="margin: 0">Kender du et sted, der bør laves om? Skriv til os.</p>
+        <p style="margin: 6px 0 0; font-weight: 700; color: #15803d; overflow-wrap: anywhere">kontakt@ringeklokken.dk</p>
       </div>
     </div>
   </section>
-</main>
 
-<footer>
-  <div class="wrap">
-    <span class="foot-name">Ringeklokken</span>
-    <span>København · ringeklokken.dk</span>
-  </div>
-</footer>
-
+  <footer style="background: #15803d; color: #ffffff">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 28px clamp(20px, 4vw, 40px) 36px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; font-size: 15px">
+      <span style="font-family: 'Gloock', Georgia, serif; font-size: 28px">Ringeklokken</span>
+      <span>København · ringeklokken.dk</span>
+    </div>
+  </footer>
+</div>
 <script>
-(function () {
-  /* Bladhovedet skaleres, så navnet fylder hele bredden */
-  var plate = document.getElementById('nameplate');
-  var word = plate.querySelector('span');
-  function fit() {
-    plate.style.fontSize = '';
-    var box = plate.clientWidth, w = word.getBoundingClientRect().width;
-    if (!box || !w) return;
-    var size = parseFloat(getComputedStyle(plate).fontSize);
-    plate.style.fontSize = (size * box / w * 0.995) + 'px';
-  }
-  fit();
-  window.addEventListener('resize', fit);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-
-  /* Klokken */
-  var bell = document.getElementById('bell');
-  var ctx = null;
-  function ding() {
-    try {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      ctx = ctx || new AC();
-      if (ctx.state === 'suspended') ctx.resume();
-      var now = ctx.currentTime;
-      [[2100, 0.22, 1.1], [3150, 0.12, 0.8], [5300, 0.05, 0.4]].forEach(function (p) {
-        var o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.value = p[0];
-        g.gain.setValueAtTime(p[1], now);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + p[2]);
-        o.connect(g); g.connect(ctx.destination);
-        o.start(now); o.stop(now + p[2]);
-      });
-    } catch (e) {}
-  }
-  bell.addEventListener('click', function () {
-    bell.classList.remove('ringing');
-    void bell.offsetWidth;
-    bell.classList.add('ringing');
-    ding();
-  });
+(function(){
+  var btn=document.getElementById('bell'),svg=document.getElementById('bell-svg'),ctx=null,t;
+  function ding(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ctx=ctx||new AC();if(ctx.state==='suspended')ctx.resume();var now=ctx.currentTime;
+    [[2100,.22,1.1],[3150,.12,.8],[5300,.05,.4]].forEach(function(p){var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=p[0];g.gain.setValueAtTime(p[1],now);g.gain.exponentialRampToValueAtTime(.0001,now+p[2]);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+p[2]);});}catch(e){}}
+  btn.addEventListener('click',function(){ding();clearTimeout(t);svg.classList.remove('rk-ring');void svg.getBoundingClientRect();svg.classList.add('rk-ring');t=setTimeout(function(){svg.classList.remove('rk-ring')},900);});
 })();
 </script>
 </body>
