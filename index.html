@@ -518,6 +518,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     function smooth(w){var T=S.slice();for(var i=0;i<=N;i++){var a=0,c=0;for(var k=-w;k<=w;k++){a+=S[Math.min(N,Math.max(0,i+k))];c++;}T[i]=a/c;}S=T;}
     for(var it=0;it<14;it++){clampS();smooth(26);}
     clampS();smooth(12);for(i=0;i<=N;i++)S[i]=Math.max(8,Math.min(L-36,S[i]));
+    var kE=Math.round(N*0.12),d0=8-S[0],dN=(L-36)-S[N];for(i=0;i<=kE;i++){var u=i/kE,wE=1-u*u*(3-2*u);S[i]+=d0*wE;S[N-i]+=dN*wE;}for(i=1;i<=N;i++)if(S[i]<S[i-1])S[i]=S[i-1];
     var X=window.RK_X||{},xr=document.querySelector('#rk-xing .rk-road');X.sStop=null;
     if(xr){var rr=docRect(xr),sy=rr.t-24,lo2=0,hi2=L;for(var it=0;it<26;it++){var m2=(lo2+hi2)/2;if(PM.at(m2).y<sy)lo2=m2;else hi2=m2;}X.sStop=lo2;
       var cp=PM.at(lo2+24),bl=document.createElementNS(NS,'rect');bl.setAttribute('x',(cp.x-15).toFixed(1));bl.setAttribute('y',rr.t);bl.setAttribute('width',30);bl.setAttribute('height',rr.b-rr.t);bl.setAttribute('fill','#2f6fd0');bl.setAttribute('opacity','.9');marks.appendChild(bl);
