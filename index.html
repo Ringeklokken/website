@@ -405,9 +405,10 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     var y0=secTop('sager')+40;
     run(xR,yS,y0-100,0);cross(-1,y0);
     run(xL,y0+80,ib.b+100,0.7);
-    P.push([margin+80,ib.b+120]);P.push([xIn-20,ib.b+250]);
-    P.push([xIn,(ib.b+250+gaps[0]-170)/2]);P.push([margin+60,gaps[0]-130]);
-    var side=1;cross(1,gaps[0]);
+    var g0=gaps[0],ym=(ib.b+g0)/2;
+    P.push([margin+70,ib.b+150]);P.push([(margin+xIn)/2+10,ym]);P.push([xIn,g0-90]);
+    P.push([xIn+90,g0]);P.push([(xIn+W)/2,g0]);P.push([(xR+W/2)/2+60,g0]);P.push([xR-72,g0]);P.push([xR,g0+80]);
+    var side=1;
     for(var gi=1;gi<gaps.length;gi++){var x0=side>0?xR:xL;run(x0,gaps[gi-1]+80,gaps[gi]-100,gi);side=-side;cross(side,gaps[gi]);}
     var xe=side>0?xR:xL;run(xe,gaps[gaps.length-1]+80,fT-60,9);P.push([xe,fT-30]);
     var d=spline(P);
