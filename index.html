@@ -65,6 +65,22 @@ a{color:inherit}a:hover{color:#15803d}
 #top > section,#om > div{border-radius:20px;overflow:hidden}
 header a[href="#kontakt"]{border-radius:10px}
 @media (max-width:760px){#top > section,#om > div{border-radius:14px}}
+.rk-soc-grid{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px}
+.rk-soc{display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-height:150px;padding:24px;border-radius:20px;text-decoration:none;color:#111512;transition:transform .2s ease,background-color .2s ease}
+.rk-soc-name{font-family:'Gloock',Georgia,serif;font-size:32px;line-height:1.05}
+.rk-soc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;font-size:16px}
+.rk-soc-handle{overflow-wrap:anywhere}
+.rk-arrow{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#ffffff;color:#15803d}
+.rk-soc-green{background:#15803d;color:#ffffff}
+.rk-soc-tint{background:#edf5ef}
+.rk-soc-tint .rk-soc-handle{color:#15803d}
+.rk-soc-tint .rk-arrow{background:#15803d;color:#ffffff}
+.rk-soc-soon{background:#ffffff;border:2px dashed #b9d1c1;color:#4a5d52}
+a.rk-soc:hover{transform:translateY(-3px)}
+a.rk-soc-green:hover{background:#106b33}
+a.rk-soc-tint:hover{background:#e0efe5}
+a.rk-soc:focus-visible{outline:3px solid #111512;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){a.rk-soc:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -319,24 +335,24 @@ header a[href="#kontakt"]{border-radius:10px}
   <section id="find" style="max-width: 1200px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 0">
     <div style="border-top: 1px solid #111512; padding-top: 24px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 48px">
       <h2 style="margin: 0; font-family: 'Gloock', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4vw, 50px); line-height: 1.08">Find os her</h2>
-      <p style="margin: 0; max-width: 28em"><br></p>
+      <p style="margin: 0; max-width: 28em">Følg med i kampen for bedre cykelstier.</p>
     </div>
-    <div style="margin-top: 40px; display: flex; flex-direction: column">
-      <a target="_blank" rel="noopener" href="https://www.instagram.com/ringeklokkendk/" style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; text-decoration: none">
-        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">Instagram</span>
-        <span style="font-weight: 700; color: #15803d">@ringeklokkendk ↗</span>
+    <div class="rk-soc-grid">
+      <a class="rk-soc rk-soc-green" href="https://www.instagram.com/ringeklokkendk/" target="_blank" rel="noopener">
+        <span class="rk-soc-name">Instagram</span>
+        <span class="rk-soc-foot"><span class="rk-soc-handle">@ringeklokkendk</span><span class="rk-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 12 L12 4 M6 4 H12 V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span>
       </a>
-      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512">
-        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">LinkedIn</span>
-        <span style="font-weight: 700; color: #15803d">Ringeklokken</span>
+      <a class="rk-soc rk-soc-tint" href="https://x.com/RingeklokkenDK" target="_blank" rel="noopener">
+        <span class="rk-soc-name">X</span>
+        <span class="rk-soc-foot"><span class="rk-soc-handle">@RingeklokkenDK</span><span class="rk-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 12 L12 4 M6 4 H12 V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span>
+      </a>
+      <div class="rk-soc rk-soc-tint">
+        <span class="rk-soc-name">LinkedIn</span>
+        <span class="rk-soc-foot"><span class="rk-soc-handle">Ringeklokken</span></span>
       </div>
-      <a target="_blank" rel="noopener" href="https://x.com/RingeklokkenDK" style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; text-decoration: none">
-        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">X</span>
-        <span style="font-weight: 700; color: #15803d">@RingeklokkenDK ↗</span>
-      </a>
-      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; padding: 20px 0; border-top: 1px solid #111512; border-bottom: 1px solid #111512">
-        <span style="font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; line-height: 1.2">Facebook</span>
-        <span style="font-weight: 700; color: #15803d">Kommer snart</span>
+      <div class="rk-soc rk-soc-soon">
+        <span class="rk-soc-name">Facebook</span>
+        <span class="rk-soc-foot"><span class="rk-soc-handle">Kommer snart</span></span>
       </div>
     </div>
   </section>
