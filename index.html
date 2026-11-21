@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ringeklokken</title>
+<meta name="description" content="Ringeklokken arbejder for bedre vilkår for alle, der cykler i København.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap">
+<style>
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+img { max-width: 100%; }
+/* Layout: magasin. Navnet står som et bladhoved i fuld bredde, forsiden er én grøn flade med overskrift og klokke, og resten er hvidt papir med tynde streger, små rubrikker og store serif-overskrifter. Skarpe hjørner hele vejen. */
+:root {
+  --paper: #ffffff;
+  --ink: #111512;
+  --muted: #55605a;
+  --rule: #111512;
+  --hair: #11151226;
+  --green: #15803d;
+  --green-deep: #0c2a1a;
+  --tint: #edf5ef;
+  --on-green: #ffffff;
+  --on-green-muted: #dff1e5;
+  --on-deep-muted: #b9cec2;
+  --deep-hair: #ffffff33;
+  --chrome: #eef2ef;
+  --chrome-shade: #b9c6be;
+  --chrome-light: #ffffff;
+  --display: "Gloock", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wrap: 1240px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: -.01em; text-wrap: balance; margin: 0; line-height: 1.04; }
+p { margin: 0; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.label { font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+/* Bladhoved */
+.util { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 28px; padding-block: 16px; }
+.util .label { color: var(--muted); }
+.nav { display: flex; flex-wrap: wrap; gap: 6px 26px; }
+.nav a { text-decoration: none; }
+.nav a:hover { color: var(--green); }
+.nameplate { display: block; overflow: hidden; border-top: 1px solid var(--rule); border-bottom: 4px solid var(--rule); padding-block: .04em .1em; text-decoration: none; color: var(--green); font-family: var(--display); font-size: min(13vw, 168px); line-height: 1; letter-spacing: -.02em; white-space: nowrap; }
+.nameplate span { display: inline-block; }
+
+/* Forside */
+.cover { background: var(--green); color: var(--on-green); margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; }
+.cover-text { padding: clamp(28px, 5vw, 64px); min-width: 0; }
+.cover-text .label { color: var(--on-green-muted); margin-bottom: 20px; }
+.cover h1 { font-size: clamp(2.3rem, 5.4vw, 4.5rem); }
+.lead { font-size: 1.18rem; color: var(--on-green-muted); max-width: 31em; margin-top: 22px; }
+.cover-links { display: flex; flex-wrap: wrap; gap: 10px 30px; margin-top: 30px; }
+.cover-links a { font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--on-green); padding-bottom: 3px; }
+.cover-links a:hover { border-bottom-color: transparent; }
+.cover-bell { padding: clamp(12px, 3vw, 40px); min-width: 0; }
+.bell-btn { display: block; background: none; border: 0; padding: 0; cursor: pointer; width: 100%; max-width: 460px; margin-inline: auto; color: var(--on-green); }
+.bell-btn svg { width: 100%; height: auto; display: block; }
+.caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 20px; padding-block: 10px; border-bottom: 1px solid var(--hair); font-size: .88rem; color: var(--muted); }
+.wave { fill: none; stroke: currentColor; stroke-width: 5; stroke-linecap: round; opacity: 0; }
+.dome { transform-origin: 110px 124px; }
+.lever { transform-origin: 158px 130px; transition: transform .12s ease-out; }
+.bell-btn:hover .lever { transform: rotate(5deg); }
+.ringing .dome { animation: shake .55s ease-out; }
+.ringing .lever { animation: strike .28s ease-out; }
+.ringing .wave { animation: wave .8s ease-out; }
+.ringing .wave.w2 { animation-delay: .12s; }
+@keyframes shake { 0%,100% { transform: rotate(0); } 18% { transform: rotate(-4deg); } 45% { transform: rotate(3deg); } 75% { transform: rotate(-1.5deg); } }
+@keyframes strike { 0%,100% { transform: rotate(0); } 40% { transform: rotate(14deg); } }
+@keyframes wave { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ringing .dome, .ringing .lever { animation: none; } .bell-btn:hover .lever { transform: none; } }
+
+/* Sektionshoved */
+.sec { padding-block: clamp(56px, 8vw, 104px) 0; }
+.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 10px 32px; align-items: baseline; border-top: 4px solid var(--rule); padding-top: 16px; }
+.sec-head .label { color: var(--green); }
+.sec-head h2 { font-size: clamp(2rem, 4.6vw, 3.6rem); }
+.sec-head p { grid-column: 2; color: var(--muted); font-size: 1.1rem; max-width: 34em; margin-top: 6px; }
+
+/* Mærkesager */
+.issues { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 44px; border-top: 1px solid var(--rule); }
+.issue { padding: 22px 24px 28px; border-left: 1px solid var(--hair); min-width: 0; }
+.issue:first-child { border-left: 0; padding-left: 0; }
+.issue:last-child { padding-right: 0; }
+.issue .label { color: var(--green); display: block; margin-bottom: 14px; }
+.issue h3 { font-size: clamp(1.5rem, 2.3vw, 1.95rem); margin-bottom: 12px; }
+.issue p { color: var(--muted); font-size: .98rem; }
+
+/* Om os */
+.about { background: var(--green-deep); color: var(--on-green); margin-top: clamp(56px, 8vw, 104px); }
+.about .wrap { padding-block: clamp(56px, 8vw, 104px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 16px 32px; }
+.about .label { color: var(--on-deep-muted); padding-top: 14px; }
+.about h2 { font-size: clamp(2.2rem, 5.6vw, 4.6rem); }
+.about-text { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 40px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--deep-hair); }
+.about-text p { color: var(--on-deep-muted); font-size: 1.06rem; }
+
+/* Sociale medier */
+.social-list { margin-top: 44px; border-top: 1px solid var(--rule); }
+.social-item { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 24px; padding-block: 20px; border-bottom: 1px solid var(--hair); text-decoration: none; }
+.social-item .name { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; }
+.social-item .handle { font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
+a.social-item:hover .name { color: var(--green); }
+a.social-item .handle::after { content: " \2197"; color: var(--green); }
+.social-item.soon .name { color: var(--muted); }
+
+/* Følg med */
+.ways { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 44px; border-top: 1px solid var(--rule); }
+.way { padding: 22px 32px 0 0; min-width: 0; }
+.way + .way { padding: 22px 0 0 32px; border-left: 1px solid var(--hair); }
+.way h3 { font-size: 1.7rem; margin-bottom: 10px; }
+.way p { color: var(--muted); }
+.way .val { color: var(--ink); font-weight: 700; user-select: all; overflow-wrap: anywhere; }
+
+footer { margin-top: clamp(56px, 8vw, 104px); background: var(--tint); }
+footer .wrap { padding-block: 28px 36px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; font-size: .9rem; color: var(--muted); }
+footer .foot-name { font-family: var(--display); font-size: 1.6rem; color: var(--green); }
+
+@media (max-width: 980px) {
+  .issues { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .issue { border-bottom: 1px solid var(--hair); }
+  .issue:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .issue:nth-child(even) { padding-right: 0; }
+}
+@media (max-width: 760px) {
+  .cover { grid-template-columns: minmax(0, 1fr); margin-top: 20px; }
+  .cover-bell { order: -1; padding: 24px 24px 0; }
+  .bell-btn { max-width: 300px; }
+  .sec-head, .about .wrap, .about-text, .ways { grid-template-columns: minmax(0, 1fr); }
+  .sec-head p { grid-column: 1; }
+  .about .label { padding-top: 0; }
+  .issues { grid-template-columns: minmax(0, 1fr); }
+  .issue, .issue:nth-child(even) { border-left: 0; padding-inline: 0; }
+  .way, .way + .way { padding: 22px 0 0; border-left: 0; }
+  .way + .way { margin-top: 22px; border-top: 1px solid var(--hair); }
+}
+</style>
+</head>
+<body>
+<header class="wrap" id="top">
+  <div class="util">
+    <span class="label">Cyklisternes stemme i København</span>
+    <nav class="nav label" aria-label="Hovedmenu">
+      <a href="#sager">Mærkesager</a>
+      <a href="#om">Om os</a>
+      <a href="#sociale-medier">Sociale medier</a>
+      <a href="#med">Følg med</a>
+    </nav>
+  </div>
+  <a class="nameplate" id="nameplate" href="#top" aria-label="Ringeklokken"><span>Ringeklokken</span></a>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="cover">
+      <div class="cover-text">
+        <p class="label">Interesseorganisation for cyklister</p>
+        <h1>Vi ringer med klokken, når byen glemmer cyklerne.</h1>
+        <p class="lead">Ringeklokken arbejder for bedre vilkår for alle, der cykler i København. Bredere stier, sikrere kryds og plads til at parkere.</p>
+        <div class="cover-links">
+          <a href="#sager">Se mærkesagerne</a>
+          <a href="#med">Følg med fra starten</a>
+        </div>
+      </div>
+      <div class="cover-bell">
+        <button class="bell-btn" id="bell" type="button" aria-label="Ring med klokken">
+          <svg viewBox="0 0 300 190" aria-hidden="true">
+            <defs>
+              <clipPath id="dome-clip"><path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z"/></clipPath>
+            </defs>
+            <path class="wave w1" d="M44 58 Q30 70 26 88"/>
+            <path class="wave w2" d="M28 40 Q8 62 4 88"/>
+            <path class="wave w1" d="M176 58 Q190 70 194 88"/>
+            <path class="wave w2" d="M192 40 Q212 62 216 88"/>
+            <rect x="6" y="150" width="204" height="16" rx="8" fill="var(--chrome)" stroke="var(--green-deep)" stroke-width="4"/>
+            <path d="M18 155 H186" stroke="var(--chrome-light)" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <rect x="200" y="143" width="96" height="30" rx="11" fill="var(--green-deep)"/>
+            <rect x="194" y="139" width="12" height="38" rx="5" fill="var(--green-deep)"/>
+            <g stroke="var(--green)" stroke-width="3" stroke-linecap="round" fill="none">
+              <path d="M220 150 V166"/><path d="M234 150 V166"/><path d="M248 150 V166"/><path d="M262 150 V166"/><path d="M276 150 V166"/>
+            </g>
+            <rect x="95" y="143" width="30" height="30" rx="6" fill="var(--green-deep)"/>
+            <rect x="101" y="122" width="18" height="26" fill="var(--green-deep)"/>
+            <g class="lever">
+              <path d="M158 130 L204 119" stroke="var(--green-deep)" stroke-width="9" stroke-linecap="round" fill="none"/>
+              <ellipse cx="212" cy="116" rx="17" ry="9" transform="rotate(-14 212 116)" fill="var(--green-deep)"/>
+            </g>
+            <g class="dome">
+              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="var(--chrome)"/>
+              <g clip-path="url(#dome-clip)" fill="none" stroke-linecap="round">
+                <path d="M152 74 C168 88 170 104 166 122" stroke="var(--chrome-shade)" stroke-width="16"/>
+                <path d="M68 106 C68 88 80 76 94 72" stroke="var(--chrome-light)" stroke-width="9"/>
+              </g>
+              <path d="M52 109 A62 15 0 0 0 168 109" stroke="var(--green-deep)" stroke-width="3" fill="none"/>
+              <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="none" stroke="var(--green-deep)" stroke-width="5" stroke-linejoin="round"/>
+              <ellipse cx="110" cy="66" rx="12" ry="5" fill="var(--green-deep)"/>
+              <rect x="105" y="55" width="10" height="11" rx="3" fill="var(--green-deep)"/>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </section>
+    <p class="caption"><span>Tryk på klokken, og hør den ringe.</span><span>København</span></p>
+  </div>
+
+  <section class="sec wrap" id="sager">
+    <div class="sec-head">
+      <span class="label">Mærkesager</span>
+      <h2>Det kæmper vi for</h2>
+      <p>København kalder sig cykelby. Det forpligter. Her er de fire ting, vi vil holde byen op på.</p>
+    </div>
+    <div class="issues">
+      <article class="issue">
+        <span class="label">Fremkommelighed</span>
+        <h3>Plads på stierne</h3>
+        <p>De travleste strækninger er for smalle til den trafik, de bærer. Vi vil have bredere cykelstier dér, hvor der er kø hver morgen.</p>
+      </article>
+      <article class="issue">
+        <span class="label">Sikkerhed</span>
+        <h3>Sikre kryds</h3>
+        <p>Et kryds skal bygges, så cyklister og svingende biler ikke får grønt i samme sekund. Sikkerhed må ikke afhænge af, at alle ser sig for.</p>
+      </article>
+      <article class="issue">
+        <span class="label">Parkering</span>
+        <h3>Parkering, der virker</h3>
+        <p>Ved stationer og handelsgader skal der være stativer nok. Mangler de, ender cyklerne på fortovet, og det går ud over alle.</p>
+      </article>
+      <article class="issue">
+        <span class="label">Vedligehold</span>
+        <h3>Stier, der holder hele året</h3>
+        <p>Huller, glasskår, sne og vejarbejde uden omkørsel. Cykelstierne skal vedligeholdes og ryddes lige så pålideligt som vejene.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="about" id="om">
+    <div class="wrap">
+      <span class="label">Om os</span>
+      <div>
+        <h2>En ny stemme for dem på to hjul</h2>
+        <div class="about-text">
+          <p>Ringeklokken er en helt ny organisation. Vi er startet, fordi cyklisterne fylder meget i Københavns gader og for lidt, når byens plads og penge bliver fordelt.</p>
+          <p>Vi er uafhængige af partier og taler kun cyklisternes sag. Målet er enkelt: Det skal være hurtigt, trygt og nemt at cykle i København, uanset om du er syv eller halvfjerds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="sociale-medier">
+    <div class="sec-head">
+      <span class="label">Sociale medier</span>
+      <h2>Find os her</h2>
+      <p>Her deler vi nyt fra cykelstierne og fortæller, hvad vi arbejder på.</p>
+    </div>
+    <div class="social-list">
+      <a class="social-item" href="https://www.instagram.com/ringeklokken/" target="_blank" rel="noopener">
+        <span class="name">Instagram</span>
+        <span class="handle">@Ringeklokken</span>
+      </a>
+      <div class="social-item">
+        <span class="name">LinkedIn</span>
+        <span class="handle">Ringeklokken</span>
+      </div>
+      <a class="social-item" href="https://x.com/RingeklokkenDK" target="_blank" rel="noopener">
+        <span class="name">X</span>
+        <span class="handle">@RingeklokkenDK</span>
+      </a>
+      <div class="social-item soon">
+        <span class="name">Facebook</span>
+        <span class="handle">Ringeklokken · kommer snart</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="med">
+    <div class="sec-head">
+      <span class="label">Følg med</span>
+      <h2>Følg med fra starten</h2>
+      <p>Vi er ved at bygge fundamentet. Tilmelding og medlemskab åbner, når det er på plads. Indtil da kan du følge os på de sociale medier og skrive til os, hvis du vil hjælpe til.</p>
+    </div>
+    <div class="ways">
+      <div class="way">
+        <h3>Medlemskab</h3>
+        <p>Åbner senere. Vi siger til her på siden og på de sociale medier.</p>
+      </div>
+      <div class="way">
+        <h3>Kontakt</h3>
+        <p>Kender du et sted, der bør laves om? Skriv til os.<br><span class="val">kontakt@ringeklokken.dk</span></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-name">Ringeklokken</span>
+    <span>København · ringeklokken.dk</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* Bladhovedet skaleres, så navnet fylder hele bredden */
+  var plate = document.getElementById('nameplate');
+  var word = plate.querySelector('span');
+  function fit() {
+    plate.style.fontSize = '';
+    var box = plate.clientWidth, w = word.getBoundingClientRect().width;
+    if (!box || !w) return;
+    var size = parseFloat(getComputedStyle(plate).fontSize);
+    plate.style.fontSize = (size * box / w * 0.995) + 'px';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+
+  /* Klokken */
+  var bell = document.getElementById('bell');
+  var ctx = null;
+  function ding() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      ctx = ctx || new AC();
+      if (ctx.state === 'suspended') ctx.resume();
+      var now = ctx.currentTime;
+      [[2100, 0.22, 1.1], [3150, 0.12, 0.8], [5300, 0.05, 0.4]].forEach(function (p) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = p[0];
+        g.gain.setValueAtTime(p[1], now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + p[2]);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(now); o.stop(now + p[2]);
+      });
+    } catch (e) {}
+  }
+  bell.addEventListener('click', function () {
+    bell.classList.remove('ringing');
+    void bell.offsetWidth;
+    bell.classList.add('ringing');
+    ding();
+  });
+})();
+</script>
+</body>
+</html>
