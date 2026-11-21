@@ -421,7 +421,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
 })();
 </script>
 <svg id="rk-lane" aria-hidden="true"><defs><linearGradient id="rk-lane-fade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="140"><stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop><stop offset="1" stop-color="#ffffff" stop-opacity="1"></stop></linearGradient><mask id="rk-lane-mask" maskUnits="userSpaceOnUse"><rect x="0" y="0" width="100%" height="100%" fill="url(#rk-lane-fade)"></rect></mask></defs>
-<g mask="url(#rk-lane-mask)"><path id="rk-lane-curb" fill="none" stroke="#c4ccc7" stroke-width="34" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-path" fill="none" stroke="#4d5551" stroke-width="30" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-line" fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="butt" stroke-linejoin="round" opacity=".9"></path><path id="rk-lane-inner" fill="none" stroke="#4d5551" stroke-width="19" stroke-linecap="butt" stroke-linejoin="round"></path><g id="rk-lane-marks"></g><g id="rk-scenery"></g><path id="rk-lane-stop" fill="none" stroke="#ffffff" stroke-width="3"></path></g></svg>
+<g><path id="rk-lane-curb" fill="none" stroke="#c4ccc7" stroke-width="34" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-path" fill="none" stroke="#4d5551" stroke-width="30" stroke-linecap="butt" stroke-linejoin="round"></path><path id="rk-lane-line" fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="butt" stroke-linejoin="round" opacity=".9"></path><path id="rk-lane-inner" fill="none" stroke="#4d5551" stroke-width="19" stroke-linecap="butt" stroke-linejoin="round"></path><g id="rk-lane-marks"></g><g id="rk-scenery"></g><path id="rk-lane-stop" fill="none" stroke="#ffffff" stroke-width="3"></path></g></svg>
 <div id="rk-rider" aria-hidden="true">
   <svg viewBox="-30 -14 60 28" width="60" height="28">
     <path d="M-29 0 H-19 M14.5 0 H26.5" stroke="#e4ebe6" stroke-width="2.2" stroke-linecap="round"></path>
@@ -441,12 +441,18 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   var lp=document.getElementById('rk-lane-path'),ls=document.getElementById('rk-lane-stop'),marks=document.getElementById('rk-lane-marks'),fade=document.getElementById('rk-lane-fade'),scen=document.getElementById('rk-scenery');
   var paths=['rk-lane-curb','rk-lane-path','rk-lane-line','rk-lane-inner'].map(function(i){return document.getElementById(i)});
   var ka=document.getElementById('rk-knee-a'),kb=document.getElementById('rk-knee-b'),lastSig='';
-  var on=false,L=0,cur=null,curAng=90,raf=0,dist=0,sp=0,dir=1,dirN=0,TBL=null,NS='http://www.w3.org/2000/svg';
+  var on=false,L=0,cur=null,curAng=90,raf=0,dist=0,sp=0,dir=1,dirN=0,TBL=null,PM=null,NS='http://www.w3.org/2000/svg';
   function docRect(e){var r=e.getBoundingClientRect();return {l:r.left+scrollX,t:r.top+scrollY,r:r.right+scrollX,b:r.bottom+scrollY};}
   function spline(P){var d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
     for(var i=0;i<P.length-1;i++){var p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
       d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}
     return d;}
+  function makePath(P){var xs=[],ys=[],cum=[],l=0,px=P[0][0],py=P[0][1];xs.push(px);ys.push(py);cum.push(0);
+    for(var i=0;i<P.length-1;i++){var p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
+      var ax=p1[0],ay=p1[1],bx=p1[0]+(p2[0]-p0[0])/6,by=p1[1]+(p2[1]-p0[1])/6,cx=p2[0]-(p3[0]-p1[0])/6,cy=p2[1]-(p3[1]-p1[1])/6,dx=p2[0],dy=p2[1];
+      for(var k=1;k<=24;k++){var t=k/24,u=1-t,x=u*u*u*ax+3*u*u*t*bx+3*u*t*t*cx+t*t*t*dx,y=u*u*u*ay+3*u*u*t*by+3*u*t*t*cy+t*t*t*dy;l+=Math.hypot(x-px,y-py);xs.push(x);ys.push(y);cum.push(l);px=x;py=y;}}
+    var n=cum.length;
+    return {L:l,at:function(s){if(s<=0)return {x:xs[0],y:ys[0]};if(s>=l)return {x:xs[n-1],y:ys[n-1]};var lo=0,hi=n-1;while(hi-lo>1){var m=(lo+hi)>>1;if(cum[m]<s)lo=m;else hi=m;}var f=(s-cum[lo])/((cum[hi]-cum[lo])||1);return {x:xs[lo]+(xs[hi]-xs[lo])*f,y:ys[lo]+(ys[hi]-ys[lo])*f};}};}
   function add(parent,html,x,y,a){var g=document.createElementNS(NS,'g');g.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+')'+(a?' rotate('+a.toFixed(1)+')':''));g.innerHTML=html;parent.appendChild(g);}
   var BIKE='<g fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"><circle cx="-5" cy="2" r="3.2"></circle><circle cx="5" cy="2" r="3.2"></circle><path d="M-5 2 L-1.5 -3 L3.5 -3 L5 2 M-1.5 -3 L0.5 2 L3.5 -3 M-2.5 -4.5 H-0.5 M3.5 -3 L3 -5 H4.8"></path></g>';
   var TREE='<ellipse cx="3" cy="4" rx="13" ry="11" fill="#0f2a1c" opacity=".12"></ellipse><circle r="13" fill="#2e7d4a"></circle><circle cx="-3.5" cy="-3.5" r="7.5" fill="#43a063"></circle><circle cx="4" cy="3" r="4" fill="#256a3e" opacity=".7"></circle>';
@@ -482,21 +488,21 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     svgL.setAttribute('width',W);svgL.setAttribute('height',H);svgL.style.width=W+'px';svgL.style.height=H+'px';
     paths.forEach(function(p){p.setAttribute('d',d)});
     fade.setAttribute('y1',yS);fade.setAttribute('y2',yS+140);
-    L=lp.getTotalLength();
-    var e=lp.getPointAtLength(L-1);ls.setAttribute('d','M'+(e.x-15)+' '+(e.y-4)+' H'+(e.x+15));
+    PM=makePath(P);L=PM.L;
+    var e=PM.at(L-1);ls.setAttribute('d','M'+(e.x-15)+' '+(e.y-4)+' H'+(e.x+15));
     while(marks.firstChild)marks.removeChild(marks.firstChild);
-    for(var s=320;s<L-160;s+=640){var p=lp.getPointAtLength(s),q=lp.getPointAtLength(s+3);add(marks,BIKE,p.x,p.y,Math.atan2(q.y-p.y,q.x-p.x)*57.2958-90);}
+    for(var s=320;s<L-160;s+=640){var p=PM.at(s),q=PM.at(s+3);add(marks,BIKE,p.x,p.y,Math.atan2(q.y-p.y,q.x-p.x)*57.2958-90);}
     // scenery
     var obs=[];['header','#top > div','#top > section','.rk-split-aside h2','.rk-index','.rk-split-main','#om > div','#rk-xing .rk-road','#rk-xing .rk-light','#tal > *','#find > *','#kontakt > *','footer'].forEach(function(sel){Array.prototype.forEach.call(document.querySelectorAll(sel),function(n){var b=docRect(n);if(b.r-b.l>0)obs.push(b);});});
     function free(x,y,rad){if(x-rad<6||x+rad>W-6||y-rad<yS+60)return false;var inM=(x+rad<margin-8)||(x-rad>W-margin+8),inA=(x+rad<mL-40&&x-rad>margin&&y-rad>ib.b+24&&y+rad<ob.t-90);if(!inM&&!inA)return false;for(var i=0;i<obs.length;i++){var o=obs[i];if(x+rad>o.l-10&&x-rad<o.r+10&&y+rad>o.t-10&&y-rad<o.b+10)return false;}
       for(var k=0;k<placed.length;k++){var q=placed[k];if(Math.hypot(q[0]-x,q[1]-y)<q[2]+rad+6)return false;}
       var nearest=lpNear(x,y);return nearest>17+rad+4;}
-    var samples=[];for(var t=0;t<=L;t+=12){var pp=lp.getPointAtLength(t);samples.push([pp.x,pp.y]);}
+    var samples=[];for(var t=0;t<=L;t+=12){var pp=PM.at(t);samples.push([pp.x,pp.y]);}
     function lpNear(x,y){var m=1e9;for(var i=0;i<samples.length;i++){var dx=samples[i][0]-x,dy=samples[i][1]-y;if(Math.abs(dy)>80)continue;var dd=dx*dx+dy*dy;if(dd<m)m=dd;}return Math.sqrt(m);}
     while(scen.firstChild)scen.removeChild(scen.firstChild);
     var placed=[],n=0;
     for(s=260;s<L-120;s+=150){n++;
-      var p1=lp.getPointAtLength(s),p2=lp.getPointAtLength(s+2),ang=Math.atan2(p2.y-p1.y,p2.x-p1.x),nx=-Math.sin(ang),ny=Math.cos(ang);
+      var p1=PM.at(s),p2=PM.at(s+2),ang=Math.atan2(p2.y-p1.y,p2.x-p1.x),nx=-Math.sin(ang),ny=Math.cos(ang);
       var kind=(n%7===3)?'sign':(n%3===0?'bush':'tree'),rad=kind==='tree'?14:(kind==='sign'?11:9),off=17+rad+(kind==='sign'?6:9);
       var sides=n%2?[1,-1]:[-1,1];
       for(var j=0;j<2;j++){var sd=sides[j],x=p1.x+nx*off*sd,y=p1.y+ny*off*sd;
@@ -505,16 +511,16 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     // speed table: constant speed along lane, softly kept on screen
     var vh=innerHeight,maxS=Math.max(1,H-vh),N=320,lo=vh*0.07,hi=vh*0.88,S=[];
     for(var i=0;i<=N;i++)S.push(8+i/N*(L-44));
-    function clampS(){for(var i=0;i<=N;i++){var sc=i/N*maxS,y=lp.getPointAtLength(S[i]).y-sc,g=0;
-        while(y<lo&&S[i]<L-36&&g<500){S[i]+=5;y=lp.getPointAtLength(S[i]).y-sc;g++;}
-        while(y>hi&&S[i]>8&&g<1000){S[i]-=5;y=lp.getPointAtLength(S[i]).y-sc;g++;}}
+    function clampS(){for(var i=0;i<=N;i++){var sc=i/N*maxS,y=PM.at(S[i]).y-sc,g=0;
+        while(y<lo&&S[i]<L-36&&g<500){S[i]+=5;y=PM.at(S[i]).y-sc;g++;}
+        while(y>hi&&S[i]>8&&g<1000){S[i]-=5;y=PM.at(S[i]).y-sc;g++;}}
       for(i=1;i<=N;i++)if(S[i]<S[i-1])S[i]=S[i-1];}
     function smooth(w){var T=S.slice();for(var i=0;i<=N;i++){var a=0,c=0;for(var k=-w;k<=w;k++){a+=S[Math.min(N,Math.max(0,i+k))];c++;}T[i]=a/c;}S=T;}
     for(var it=0;it<14;it++){clampS();smooth(26);}
     clampS();smooth(12);for(i=0;i<=N;i++)S[i]=Math.max(8,Math.min(L-36,S[i]));
     var X=window.RK_X||{},xr=document.querySelector('#rk-xing .rk-road');X.sStop=null;
-    if(xr){var rr=docRect(xr),sy=rr.t-24,lo2=0,hi2=L;for(var it=0;it<26;it++){var m2=(lo2+hi2)/2;if(lp.getPointAtLength(m2).y<sy)lo2=m2;else hi2=m2;}X.sStop=lo2;
-      var cp=lp.getPointAtLength(lo2+24),bl=document.createElementNS(NS,'rect');bl.setAttribute('x',(cp.x-15).toFixed(1));bl.setAttribute('y',rr.t);bl.setAttribute('width',30);bl.setAttribute('height',rr.b-rr.t);bl.setAttribute('fill','#2f6fd0');bl.setAttribute('opacity','.9');marks.appendChild(bl);
+    if(xr){var rr=docRect(xr),sy=rr.t-24,lo2=0,hi2=L;for(var it=0;it<26;it++){var m2=(lo2+hi2)/2;if(PM.at(m2).y<sy)lo2=m2;else hi2=m2;}X.sStop=lo2;
+      var cp=PM.at(lo2+24),bl=document.createElementNS(NS,'rect');bl.setAttribute('x',(cp.x-15).toFixed(1));bl.setAttribute('y',rr.t);bl.setAttribute('width',30);bl.setAttribute('height',rr.b-rr.t);bl.setAttribute('fill','#2f6fd0');bl.setAttribute('opacity','.9');marks.appendChild(bl);
       var lt=document.querySelector('#rk-xing .rk-light'),bd=docRect(document.getElementById('rk-xing'));if(lt){lt.style.left=(cp.x-15-30-bd.l).toFixed(0)+'px';}
       for(var ii=0;ii<=N;ii++){if(S[ii]>=X.sStop){X.lockY=ii/N*maxS;break;}}}
     var keep=TBL&&cur!==null;TBL=S;if(!keep)cur=null;req();
@@ -526,7 +532,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
     var X=window.RK_X||{},t=sAt(p);if(X.locked&&X.sStop!=null)t=X.sStop;if(cur===null)cur=t;
     var gap=t-cur,step;if(Math.abs(gap)>4000){step=gap;sp=0;}else{sp+=gap*0.075-sp*0.5;step=sp;if(Math.abs(gap)<0.4&&Math.abs(sp)<0.4){step=gap;sp=0;}}
     cur+=step;dist+=Math.abs(step);
-    var pt=lp.getPointAtLength(cur),q=lp.getPointAtLength(Math.min(L,cur+8)),b=lp.getPointAtLength(Math.max(0,cur-8));
+    var pt=PM.at(cur),q=PM.at(Math.min(L,cur+8)),b=PM.at(Math.max(0,cur-8));
     var want=sp<-1.5?-1:(sp>1.5?1:dir);if(want!==dir){dirN++;if(dirN>5){dir=want;dirN=0;}}else dirN=0;
     var ang=Math.atan2(q.y-b.y,q.x-b.x)*57.2958+(dir<0?180:0);
     var da=((ang-curAng+540)%360)-180;curAng+=Math.max(-9,Math.min(9,da*0.3));
@@ -538,7 +544,7 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   addEventListener('scroll',req,{passive:true});
   var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,150);});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(build);
-  addEventListener('load',build);setTimeout(build,1500);build();
+  addEventListener('load',build);setTimeout(build,1500);requestAnimationFrame(build);
 })();
 </script>
 <script>
