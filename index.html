@@ -16,9 +16,9 @@ html{scroll-behavior:smooth}*{box-sizing:border-box}img,svg{max-width:100%}
 body{margin:0}
 a{color:inherit}a:hover{color:#15803d}
 .rk-dome{transform-origin:110px 124px}
-.rk-lever{transform-origin:158px 130px}
+.rk-lever{transform-origin:150px 128px}
 .rk-ring .rk-dome{animation:rk-shake .55s ease-out}
-.rk-ring .rk-lever{animation:rk-strike .28s ease-out}
+.rk-ring .rk-lever{animation:rk-strike .16s ease-out 2}
 .rk-ring .rk-wave{animation:rk-wave .8s ease-out}
 .rk-ring .rk-wave2{animation:rk-wave .8s ease-out .12s}
 .rk-wave,.rk-wave2{opacity:0}
@@ -30,10 +30,10 @@ a{color:inherit}a:hover{color:#15803d}
 .rk-split-aside{flex:1 1 280px;position:sticky;top:32px;min-width:0}
 .rk-split-main{flex:2 1 480px;min-width:0}
 .rk-index{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
-.rk-index a{display:block;padding:8px 0 8px 14px;border-left:3px solid #d5ddd8;text-decoration:none;font-weight:600;transition:color .3s,border-color .3s}
+.rk-index a{display:block;padding:6px 0 6px 14px;border-left:3px solid transparent;text-decoration:none;font-weight:600;transition:color .3s,border-color .3s}
 .rk-index a.is-active{color:#15803d;border-left-color:#15803d}
 .rk-split-aside h2{font-size:clamp(34px,3.4vw,44px)!important}
-.rk-issue{min-height:min(36svh,300px);padding:24px 0 48px;border-top:3px solid #15803d;scroll-margin-top:32px}
+.rk-issue{min-height:min(36svh,300px);padding:0 0 56px;scroll-margin-top:32px}
 @media (max-width:760px){.rk-split-aside{position:static}.rk-index{display:none}.rk-issue{min-height:0}}
 .js [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:calc(var(--d,0)*80ms)}
 .js [data-reveal].is-in{opacity:1;transform:none}
@@ -56,7 +56,7 @@ a{color:inherit}a:hover{color:#15803d}
 
   <div id="top" style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px)">
     <div style="container-type: inline-size; padding-top: 24px; border-bottom: 3px solid #111512">
-      <p style="margin: 0; font-family: 'Gloock', Georgia, serif; font-size: 16cqw; line-height: 1; color: #15803d; white-space: nowrap; letter-spacing: -0.02em; padding-bottom: 0.06em">Ringeklokken</p>
+      <p style="margin: 0; font-family: 'Gloock', Georgia, serif; font-size: 16cqw; line-height: 1; color: #15803d; white-space: nowrap; letter-spacing: -0.02em; padding-bottom: 0.24em">Ringeklokken</p>
     </div>
 
     <section style="margin-top: 28px; background: #15803d; color: #ffffff; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px; padding: clamp(28px, 5vw, 64px)">
@@ -85,8 +85,11 @@ a{color:inherit}a:hover{color:#15803d}
             <rect x="95" y="143" width="30" height="30" rx="6" fill="#0c2a1a"></rect>
             <rect x="101" y="122" width="18" height="26" fill="#0c2a1a"></rect>
             <g class="rk-lever">
-              <path d="M158 130 L204 119" stroke="#0c2a1a" stroke-width="9" stroke-linecap="round" fill="none"></path>
-              <ellipse cx="212" cy="116" rx="17" ry="9" transform="rotate(-14 212 116)" fill="#0c2a1a"></ellipse>
+              <path d="M150 128 C170 128 186 122 200 110" stroke="#0c2a1a" stroke-width="8" stroke-linecap="round" fill="none"></path>
+              <rect x="194" y="92" width="36" height="22" rx="8" transform="rotate(-28 212 103)" fill="#0c2a1a"></rect>
+              <g transform="rotate(-28 212 103)" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M204 97 V109"></path><path d="M212 97 V109"></path><path d="M220 97 V109"></path></g>
+              <circle cx="150" cy="128" r="8" fill="#0c2a1a"></circle>
+              <circle cx="150" cy="128" r="3" fill="#eef2ef"></circle>
             </g>
             <g class="rk-dome">
               <path d="M48 118 C48 46 172 46 172 118 A62 15 0 0 1 48 118 Z" fill="#eef2ef"></path>
@@ -334,8 +337,10 @@ a{color:inherit}a:hover{color:#15803d}
 <script>
 (function(){
   var btn=document.getElementById('bell'),svg=document.getElementById('bell-svg'),ctx=null,t;
-  function ding(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ctx=ctx||new AC();if(ctx.state==='suspended')ctx.resume();var now=ctx.currentTime;
-    [[2100,.22,1.1],[3150,.12,.8],[5300,.05,.4]].forEach(function(p){var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=p[0];g.gain.setValueAtTime(p[1],now);g.gain.exponentialRampToValueAtTime(.0001,now+p[2]);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+p[2]);});}catch(e){}}
+  function rkStrike(ctx,t,amp){var f=2350,out=ctx.createGain();out.gain.value=amp;out.connect(ctx.destination);
+[[1,1,1.4],[2.04,.45,.9],[2.76,.35,.7],[5.4,.18,.35],[8.9,.08,.18]].forEach(function(p){[0,2.5].forEach(function(det,j){var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f*p[0]+det*p[0];g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(p[1]*(j?.6:1),t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+p[2]);o.connect(g);g.connect(out);o.start(t);o.stop(t+p[2]+.05);});});
+var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),d=b.getChannelData(0);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);var n=ctx.createBufferSource();n.buffer=b;var hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=3000;var ng=ctx.createGain();ng.gain.value=.25;n.connect(hp);hp.connect(ng);ng.connect(out);n.start(t);}
+  function ding(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ctx=ctx||new AC();if(ctx.state==='suspended')ctx.resume();var now=ctx.currentTime;rkStrike(ctx,now,.12);rkStrike(ctx,now+.16,.1);}catch(e){}}
   btn.addEventListener('click',function(){ding();clearTimeout(t);svg.classList.remove('rk-ring');void svg.getBoundingClientRect();svg.classList.add('rk-ring');t=setTimeout(function(){svg.classList.remove('rk-ring')},900);});
 })();
 </script>
