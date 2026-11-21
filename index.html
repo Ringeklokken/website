@@ -423,9 +423,11 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   var KEYS={32:1,33:1,34:1,35:1,36:1,38:1,40:1};
   function stop(e){e.preventDefault();}
   function key(e){if(KEYS[e.keyCode])e.preventDefault();}
-  function hold(){if(X.locked&&Math.abs(scrollY-X.atY)>1)scrollTo(0,X.atY);}
+  function jump(y){try{scrollTo({top:y,left:0,behavior:'instant'});}catch(e){scrollTo(0,y);}}
+  function hold(){if(X.locked&&Math.abs(scrollY-X.atY)>1)jump(X.atY);}
   function lock(){
-    X.done=true;X.locked=true;X.atY=Math.round(lockY());scrollTo(0,X.atY);
+    X.done=true;X.locked=true;var from=scrollY,to=Math.round(lockY()),g0=performance.now();X.atY=from;
+    (function glide(n){var k=Math.min(1,(n-g0)/380),e=1-Math.pow(1-k,3);X.atY=Math.round(from+(to-from)*e);jump(X.atY);if(k<1)requestAnimationFrame(glide);})(g0);
     addEventListener('wheel',stop,{passive:false});addEventListener('touchmove',stop,{passive:false});addEventListener('keydown',key);addEventListener('scroll',hold);
     set('r');runCars(4000);
     setTimeout(function(){set('y');},3900);
