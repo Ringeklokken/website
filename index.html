@@ -33,8 +33,11 @@ a{color:inherit}a:hover{color:#15803d}
 .rk-index a{display:block;padding:6px 0 6px 14px;border-left:3px solid transparent;text-decoration:none;font-weight:600;transition:color .3s,border-color .3s}
 .rk-index a.is-active{color:#15803d;border-left-color:#15803d}
 .rk-split-aside h2{font-size:clamp(34px,3.4vw,44px)!important}
-.rk-issue{min-height:min(36svh,300px);padding:0 0 56px;scroll-margin-top:32px}
+.rk-issue{min-height:min(24svh,200px);padding:0 0 36px;scroll-margin-top:32px}
 @media (max-width:760px){.rk-split-aside{position:static}.rk-index{display:none}.rk-issue{min-height:0}}
+.js .rk-split-main.has-focus .rk-issue{opacity:.3;filter:blur(2.5px);transition:opacity .6s ease,filter .6s ease}
+.js .rk-split-main.has-focus .rk-issue.is-active{opacity:1;filter:none}
+@media (prefers-reduced-motion: reduce){.js .rk-split-main.has-focus .rk-issue{filter:none;transition:none}}
 .js [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:calc(var(--d,0)*80ms)}
 .js [data-reveal].is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.js [data-reveal]{opacity:1;transform:none;transition:none}}
@@ -347,18 +350,20 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
 <script>
 (function(){
   var root=document.documentElement;
-  var sel=['#sager .rk-split-aside','#sager .rk-issue','#om > div','#tal > div:first-child','#tal figure','#tal > p','#find > div:first-child','#find > div:last-child > *','#kontakt > div:first-child','#kontakt > div:last-child > *'];
+  var sel=['#sager .rk-split-aside','#om > div','#tal > div:first-child','#tal figure','#tal > p','#find > div:first-child','#find > div:last-child > *','#kontakt > div:first-child','#kontakt > div:last-child > *'];
   var els=[];
   sel.forEach(function(s){Array.prototype.forEach.call(document.querySelectorAll(s),function(el,i){el.setAttribute('data-reveal','');el.style.setProperty('--d',Math.min(i,4));els.push(el);});});
   if(!('IntersectionObserver' in window)){els.forEach(function(el){el.classList.add('is-in')});return;}
   var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:0.12});
   els.forEach(function(el){io.observe(el)});
 
-  var links=document.querySelectorAll('.rk-index a');
-  if(links.length&&('IntersectionObserver' in window)){
-    var map={};Array.prototype.forEach.call(links,function(a){map[a.getAttribute('href').slice(1)]=a;});
-    var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){Array.prototype.forEach.call(links,function(a){a.classList.remove('is-active')});var a=map[e.target.id];if(a)a.classList.add('is-active');}});},{rootMargin:'-35% 0px -60% 0px'});
-    Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)spy.observe(el);});
+  var links=document.querySelectorAll('.rk-index a'),issues=document.querySelectorAll('.rk-issue'),main=document.querySelector('.rk-split-main');
+  if(issues.length&&('IntersectionObserver' in window)){
+    main.classList.add('has-focus');
+    function activate(id){Array.prototype.forEach.call(issues,function(a){a.classList.toggle('is-active',a.id===id)});Array.prototype.forEach.call(links,function(a){a.classList.toggle('is-active',a.getAttribute('href')==='#'+id)});}
+    activate(issues[0].id);
+    var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)activate(e.target.id);});},{rootMargin:'-40% 0px -50% 0px'});
+    Array.prototype.forEach.call(issues,function(el){spy.observe(el)});
   }
 })();
 </script>
