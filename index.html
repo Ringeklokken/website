@@ -35,7 +35,7 @@ a{color:inherit}a:hover{color:#15803d}
 .rk-split-aside h2{font-size:clamp(34px,3.4vw,44px)!important}
 .rk-issue{min-height:min(24svh,200px);padding:0 0 36px;scroll-margin-top:32px}
 @media (max-width:760px){.rk-split-aside{position:static}.rk-index{display:none}.rk-issue{min-height:0}}
-.js .rk-split-main.has-focus .rk-issue{opacity:.3;filter:blur(2.5px);transition:opacity .6s ease,filter .6s ease}
+.js .rk-split-main.has-focus .rk-issue{opacity:.45;filter:blur(1.5px);transition:opacity .5s ease,filter .5s ease}
 .js .rk-split-main.has-focus .rk-issue.is-active{opacity:1;filter:none}
 @media (prefers-reduced-motion: reduce){.js .rk-split-main.has-focus .rk-issue{filter:none;transition:none}}
 .js [data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;transition-delay:calc(var(--d,0)*80ms)}
@@ -579,10 +579,29 @@ var len=Math.floor(ctx.sampleRate*.02),b=ctx.createBuffer(1,len,ctx.sampleRate),
   var links=document.querySelectorAll('.rk-index a'),issues=document.querySelectorAll('.rk-issue'),main=document.querySelector('.rk-split-main');
   if(issues.length&&('IntersectionObserver' in window)){
     main.classList.add('has-focus');
-    function activate(id){Array.prototype.forEach.call(issues,function(a){a.classList.toggle('is-active',a.id===id)});Array.prototype.forEach.call(links,function(a){a.classList.toggle('is-active',a.getAttribute('href')==='#'+id)});}
-    activate(issues[0].id);
-    var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)activate(e.target.id);});},{rootMargin:'-40% 0px -50% 0px'});
-    Array.prototype.forEach.call(issues,function(el){spy.observe(el)});
+    var n=issues.length,cur=-1,pin=-1,pinY=0,pinT=0,arrived=false,raf=0,each=Array.prototype.forEach,aside=document.querySelector('#sager .rk-split-aside'),idx=document.querySelector('.rk-index');
+    var smooth=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+    function paint(a){if(a===cur)return;cur=a;var lo=Math.max(0,Math.min(a,n-2));each.call(issues,function(el,i){el.classList.toggle('is-active',i===lo||i===lo+1)});each.call(links,function(l,i){l.classList.toggle('is-active',i===a)});}
+    function pick(){var line=Math.min(innerHeight*0.25,180),a=0;for(var i=0;i<n;i++)if(issues[i].getBoundingClientRect().top<line)a=i;return a;}
+    function update(){raf=0;
+      if(pin>=0){
+        if(!arrived){if(Math.abs(scrollY-pinY)<3||performance.now()>pinT){arrived=true;pinY=scrollY;}return;}
+        if(Math.abs(scrollY-pinY)<90)return;
+        pin=-1;
+      }
+      paint(pick());}
+    function onScroll(){if(!raf)raf=requestAnimationFrame(update);}
+    addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);
+    function docTop(el){return el.getBoundingClientRect().top+scrollY;}
+    each.call(links,function(l,i){l.addEventListener('click',function(e){
+      e.preventDefault();
+      var lo=Math.max(0,Math.min(i,n-2)),want=docTop(issues[i])-32,floor=docTop(issues[lo+1])+issues[lo+1].offsetHeight-innerHeight+24,y=want;
+      if(aside&&getComputedStyle(aside).position!=='sticky'){y=Math.min(want,docTop(idx)-24);if(floor>y)y=floor;}
+      y=Math.max(0,Math.round(y));
+      pin=i;pinY=y;pinT=performance.now()+1600;arrived=Math.abs(scrollY-y)<3;paint(i);
+      if(!arrived){try{scrollTo({top:y,left:0,behavior:smooth?'smooth':'instant'});}catch(_){scrollTo(0,y);}}
+    });});
+    paint(pick());
   }
 })();
 </script>
